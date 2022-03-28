@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+
+	<!-- Appenders -->
+	<Appenders>
+		<Console name="console" target="SYSTEM_OUT">
+			<PatternLayout pattern="%-5p: %c - %m%n" />
+		</Console>
+	</Appenders>
+
+	<Loggers>
+		<!-- Application Loggers -->
+		<Logger name="com.game.review" level="DEBUG" additivity="false">
+			<AppenderRef ref="console" />
+		</Logger>
+		<!-- SQL Loggers -->
+		<Logger name="jdbc.connection" level="ERROR" additivity="false">
+			<AppenderRef ref="console" />
+		</Logger>
+		<Logger name="jdbc.audit" level="OFF" additivity="false">
+			<AppenderRef ref="console" />
+		</Logger>
+		<Logger name="jdbc.resultset" level="ERROR" additivity="false">
+			<AppenderRef ref="console" />
+		</Logger>
+		<Logger name="jdbc.sqlonly" level="OFF" additivity="false">
+			<AppenderRef ref="console" />
+		</Logger>
+		<Logger name="jdbc.resultsettable" level="INFO" additivity="false">
+			<AppenderRef ref="console" />
+		</Logger>
+		<Logger name="jdbc.sqltiming" level="INFO"  additivity="false">
+			<AppenderRef ref="console" />
+		</Logger>
+		<!-- Root Logger -->
+		<Root level="WARN">
+			<AppenderRef ref="console" />
+		</Root>
+	</Loggers>
+</Configuration>
