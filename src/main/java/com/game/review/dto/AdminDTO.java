@@ -2,6 +2,8 @@ package com.game.review.dto;
 
 import java.sql.Timestamp;
 
+import org.apache.ibatis.type.Alias;
+@Alias("AdminDTO")
 public class AdminDTO {
 	private Long adNum;
 	private String adId;

@@ -2,14 +2,24 @@ package com.game.review.dto;
 
 import java.sql.Timestamp;
 
+import org.apache.ibatis.type.Alias;
+@Alias("MemberDTO")
 public class MemberDTO {
 	private Long mNum;
 	private String mEmail;
 	private String mPassword;
+	private String mName;
 	private String mNickname;
 	private Timestamp mRegdate;
 	private String mIsvalid;
 	private Long mPoint;
+	
+	public String getmName() {
+		return mName;
+	}
+	public void setmName(String mName) {
+		this.mName = mName;
+	}
 	
 	public Long getmNum() {
 		return mNum;

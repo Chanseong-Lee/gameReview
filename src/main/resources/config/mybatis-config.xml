@@ -9,7 +9,7 @@
 		<setting name="mapUnderscoreToCamelCase" value="true"/>
 	</settings>
 	<typeAliases>
-		<typeAlias type="booksdto.BooksDTO"/>
-		<typeAlias type="booksdto.MemberDTO"/>
+		<typeAlias type="com.game.review.dto.AdminDTO"/>
+		<typeAlias type="com.game.review.dto.MemberDTO"/>
 	</typeAliases>
 </configuration>
