@@ -1,4 +1,4 @@
-package com.game.review.email;
+package com.game.review.member.email;
 
 import java.io.UnsupportedEncodingException;
 

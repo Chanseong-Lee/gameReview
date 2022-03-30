@@ -11,7 +11,7 @@
 </head>
 <body>
 <h1>회원가입</h1>
-<form:form action="member/regist" commandName="mrc" method="post">
+<form:form action="regist" commandName="mrc" method="post">
 	<table>
 		<tr>
 			<td>이메일</td>

@@ -1,8 +1,9 @@
-package com.game.review.dao;
+package com.game.review.member.dao;
 
 import java.util.List;
+import java.util.Map;
 
-import com.game.review.dto.MemberDTO;
+import com.game.review.member.dto.MemberDTO;
 
 public interface MemberDAO {
 	//전체멤버
@@ -24,6 +25,11 @@ public interface MemberDAO {
 	//삭제(탈퇴)
 	public int delete(Long mNum);
 	
+	//인증키비교
+	public int countByValidKey(String validKey);
+	
+	//인증키
+	public int updateValidKey(Map<String, String> dataValues);
 	
 	
 	

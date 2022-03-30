@@ -1,4 +1,4 @@
-package com.game.review.dao;
+package com.game.review.member.dao;
 
 public interface AdminDAO {
 	

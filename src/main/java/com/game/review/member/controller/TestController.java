@@ -1,4 +1,4 @@
-package com.game.review.controller;
+package com.game.review.member.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -6,8 +6,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.game.review.dao.MemberDAO;
-import com.game.review.dto.MemberDTO;
+import com.game.review.member.dao.MemberDAO;
+import com.game.review.member.dto.MemberDTO;
 
 @Controller
 public class TestController {

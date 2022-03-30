@@ -1,4 +1,4 @@
-package com.game.review.dto;
+package com.game.review.member.dto;
 
 import java.sql.Timestamp;
 

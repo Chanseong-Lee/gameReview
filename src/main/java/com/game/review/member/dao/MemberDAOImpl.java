@@ -1,12 +1,13 @@
-package com.game.review.dao;
+package com.game.review.member.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.game.review.dto.MemberDTO;
+import com.game.review.member.dto.MemberDTO;
 
 @Repository
 public class MemberDAOImpl implements MemberDAO {
@@ -38,8 +39,7 @@ public class MemberDAOImpl implements MemberDAO {
 
 	@Override
 	public int insert(MemberDTO memberDTO) {
-		// TODO Auto-generated method stub
-		return 0;
+		return sqlSessionTemplate.insert("insert", memberDTO);
 	}
 
 	@Override
@@ -52,6 +52,16 @@ public class MemberDAOImpl implements MemberDAO {
 	public int delete(Long mNum) {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public int updateValidKey(Map<String, String> dataValues) {
+		return sqlSessionTemplate.update("updateValidKey", dataValues);
+	}
+
+	@Override
+	public int countByValidKey(String validKey) {
+		return sqlSessionTemplate.selectOne("countByValidKey", validKey);
 	}
 
 }

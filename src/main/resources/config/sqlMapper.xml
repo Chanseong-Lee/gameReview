@@ -7,30 +7,48 @@
 		select * from "MEMBER" order by "M_NUM"
 	</select>
 	<select id="selectBySeq" parameterType="Long" resultType="memberDTO">
-		select * from "MEMBER" where "M_NUM" = #{mNum}
+		select * from "MEMBER" 
+		where "M_NUM" = #{mNum}
 	</select>
 	
 	<select id="selectByEmail" parameterType="String" resultType="memberDTO">
-		select * from "MEMBER" where "M_EMAIL" = #{mEmail}
+		select * from "MEMBER" 
+		where "M_EMAIL" = #{mEmail}
 	</select>
 	
 	<select id="selectByNickname" parameterType="String" resultType="memberDTO">
-		select * from "MEMBER" where "M_NICKNAME" = #{mNickname}
+		select * from "MEMBER" 
+		where "M_NICKNAME" = #{mNickname}
+	</select>
+	
+	<!-- 이메일 인증키 비교해서 count가 1이상이면 인증 성공하도록 -->
+	<select id="countByValidKey" parameterType="String" resultType="Integer">
+		select count(*) from "MEMBER"
+		where "M_ISVALID"=#{validKey}
 	</select>
 	
 	<insert id="insert" parameterType="memberDTO">
-		insert into "MEMBER"("M_NUM", "M_EMAIL", "M_PASSWORD", "M_NICKNAME", "M_NAME")
-		values("MEMBER_SEQ".nextval, #{mEmail}, #{mPassword}, #{mNickname}, #{mName})
+		insert into "MEMBER"("M_NUM", "M_EMAIL", "M_PASSWORD", "M_NICKNAME", "M_ISVALID" ,"M_NAME")
+		values("MEMBER_SEQ".nextval, #{mEmail}, #{mPassword}, #{mNickname},#{mIsvalid} ,#{mName})
 		<selectKey keyProperty="mNum" resultType="Long">
-			select nvl(max("M_NUM"), 0) from "MEMBER"
+			select nvl(max(M_NUM), 0) from "MEMBER"
 		</selectKey>
 	</insert>
 	
 	<delete id="delete" parameterType="Long">
-		delete from "MEMBER" where "M_NUM" = #{mNum}
+		delete from "MEMBER" 
+		where "M_NUM" = #{mNum}
 	</delete>
 	
+	<update id="updateValidKey" parameterType="hashmap">
+		update "MEMBER" 
+		set "M_ISVALID" = #{validKey} 
+		where "M_EMAIL"=#{email}
+	</update>
+	
 	<update id ="updateMember" parameterType="memberDTO">
-		update "MEMBER" set "M_NICKNAME"=#{mNickname}, "M_NAME"=#{mName} where "M_NUM"=#{mNum}
+		update "MEMBER" 
+		set "M_NICKNAME"=#{mNickname}, "M_NAME"=#{mName} 
+		where "M_NUM"=#{mNum}
 	</update>
 </mapper>

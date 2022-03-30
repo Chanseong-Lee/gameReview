@@ -1,4 +1,4 @@
-package com.game.review.command;
+package com.game.review.member.command;
 
 public class MemberRegCommand {
 	private String email;
