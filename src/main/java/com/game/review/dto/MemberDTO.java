@@ -14,13 +14,6 @@ public class MemberDTO {
 	private String mIsvalid;
 	private Long mPoint;
 	
-	public String getmName() {
-		return mName;
-	}
-	public void setmName(String mName) {
-		this.mName = mName;
-	}
-	
 	public Long getmNum() {
 		return mNum;
 	}
@@ -38,6 +31,12 @@ public class MemberDTO {
 	}
 	public void setmPassword(String mPassword) {
 		this.mPassword = mPassword;
+	}
+	public String getmName() {
+		return mName;
+	}
+	public void setmName(String mName) {
+		this.mName = mName;
 	}
 	public String getmNickname() {
 		return mNickname;
@@ -63,6 +62,7 @@ public class MemberDTO {
 	public void setmPoint(Long mPoint) {
 		this.mPoint = mPoint;
 	}
+	
 	
 	
 }

@@ -18,7 +18,7 @@ public class TestController {
 	@RequestMapping(value="/test", method=RequestMethod.GET)
 	public String testSelect(Model model) {
 		
-		MemberDTO member = (MemberDTO) memberDAO.selectBySeq(1L);
+		MemberDTO member = (MemberDTO) memberDAO.selectBySeq(3L);
 		model.addAttribute("member", member);
 		return "test";
 	}

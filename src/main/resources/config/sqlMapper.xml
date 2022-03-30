@@ -13,4 +13,24 @@
 	<select id="selectByEmail" parameterType="String" resultType="memberDTO">
 		select * from "MEMBER" where "M_EMAIL" = #{mEmail}
 	</select>
+	
+	<select id="selectByNickname" parameterType="String" resultType="memberDTO">
+		select * from "MEMBER" where "M_NICKNAME" = #{mNickname}
+	</select>
+	
+	<insert id="insert" parameterType="memberDTO">
+		insert into "MEMBER"("M_NUM", "M_EMAIL", "M_PASSWORD", "M_NICKNAME", "M_NAME")
+		values("MEMBER_SEQ".nextval, #{mEmail}, #{mPassword}, #{mNickname}, #{mName})
+		<selectKey keyProperty="mNum" resultType="Long">
+			select nvl(max("M_NUM"), 0) from "MEMBER"
+		</selectKey>
+	</insert>
+	
+	<delete id="delete" parameterType="Long">
+		delete from "MEMBER" where "M_NUM" = #{mNum}
+	</delete>
+	
+	<update id ="updateMember" parameterType="memberDTO">
+		update "MEMBER" set "M_NICKNAME"=#{mNickname}, "M_NAME"=#{mName} where "M_NUM"=#{mNum}
+	</update>
 </mapper>

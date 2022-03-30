@@ -33,12 +33,29 @@
 		destroy-method="clearCache">
 		<constructor-arg ref="sqlSessionFactory"/>
 	</bean>
-	<!-- Multipart Resolver -->
+	
+	<!-- Multipart Resolver for file upload -->
 	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />
 	
 	<!-- Transaction Manager -->
 	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	
+	<!-- Mail Sender -->
+	<!-- for google -->
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="smtp.gmail.com"/><!-- 메일서버 호스트 -->
+		<property name="port" value="587"/><!-- 메일서버 포트번호 -->
+		<property name="username" value="leechanseong89@gmail.com"/>
+		<property name="password" value="Chan2711!"/>
+		<!-- 보안 연결 TLS와 관련된 설정 -->
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.smtp.auth">true</prop>
+				<prop key="mail.smtp.starttls.enable">true</prop>
+			</props>
+		</property>
 	</bean>
 	
 	<tx:annotation-driven transaction-manager="transactionManager"/>
