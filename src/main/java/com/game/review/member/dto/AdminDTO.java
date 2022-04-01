@@ -3,7 +3,7 @@ package com.game.review.member.dto;
 import java.sql.Timestamp;
 
 import org.apache.ibatis.type.Alias;
-@Alias("AdminDTO")
+@Alias("adminDTO")
 public class AdminDTO {
 	private Long adNum;
 	private String adId;

@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,8 +19,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.game.review.HomeController;
 import com.game.review.member.command.MemberRegCommand;
+import com.game.review.member.exception.AlreadyExistEmailException;
 import com.game.review.member.exception.noExistValidKeyException;
 import com.game.review.member.service.MemberRegService;
+import com.game.review.member.validate.MemberRegCommandValidator;
 @Controller
 public class MemberRegController {
 	
@@ -36,20 +39,28 @@ public class MemberRegController {
 	
 	//on submit, add a member to DB and send email to the member -> redirect to the success page
 	@RequestMapping(value="/member/regist", method=RequestMethod.POST)
-	public String insertMember(@ModelAttribute("mrc")MemberRegCommand memberRegCommand, RedirectAttributes rttr) {
+	public String insertMember(@ModelAttribute("mrc")MemberRegCommand memberRegCommand, Errors errors, RedirectAttributes rttr) {
+		//generate a validator object
+		new MemberRegCommandValidator().validate(memberRegCommand, errors);
 		
 		try {
+			if(errors.hasErrors()) {
+				return "member/memberRegForm";
+			}
 			memberRegService.insertMember(memberRegCommand);
+			
 			rttr.addAttribute("nickname", memberRegCommand.getNickname());
 			rttr.addAttribute("name", memberRegCommand.getName());
 			rttr.addAttribute("email", memberRegCommand.getEmail());
 			return "redirect:/member/registSuccess";
+		} catch (AlreadyExistEmailException e ) {
+			logger.error("이미존재하는 이메일");
+			errors.rejectValue("email", "dupEmail");
+			return "member/memberRegForm";
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return "exceptions/encodingEx";
 		} catch (MessagingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return "exceptions/messageEx";
 		}

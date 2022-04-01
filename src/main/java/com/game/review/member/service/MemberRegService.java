@@ -20,6 +20,7 @@ import com.game.review.member.dao.MemberDAO;
 import com.game.review.member.dto.MemberDTO;
 import com.game.review.member.email.MailUtils;
 import com.game.review.member.email.TempKey;
+import com.game.review.member.exception.AlreadyExistEmailException;
 import com.game.review.member.exception.noExistValidKeyException;
 @Service
 public class MemberRegService {
@@ -31,8 +32,15 @@ public class MemberRegService {
 	@Autowired
 	private JavaMailSender mailSender;
 	
-	@Transactional
 	public void insertMember(MemberRegCommand mc) throws MessagingException, UnsupportedEncodingException {
+		
+		//email duplication verification
+		MemberDTO hasEmail = (MemberDTO) memberDAO.selectByEmail(mc.getEmail());
+		logger.debug("여기까지옴?");
+		if(hasEmail != null) {
+			logger.error("error!");
+			throw new AlreadyExistEmailException();
+		}
 		
 		//encryption code
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
