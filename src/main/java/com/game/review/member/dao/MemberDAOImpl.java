@@ -30,7 +30,16 @@ public class MemberDAOImpl implements MemberDAO {
 	public Object selectByEmail(String mEmail) {
 		return sqlSessionTemplate.selectOne("selectByEmail", mEmail);
 	}
-
+	@Override
+	public int countByEmail(String mEmail) {
+		return sqlSessionTemplate.selectOne("countByEmail", mEmail);
+	}
+	
+	@Override
+	public int countByNickname(String mNickname) {
+		return sqlSessionTemplate.selectOne("countByNickname", mNickname);
+	}
+	
 	@Override
 	public int count() {
 		// TODO Auto-generated method stub

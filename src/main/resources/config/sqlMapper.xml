@@ -16,6 +16,18 @@
 		where "M_EMAIL" = #{mEmail}
 	</select>
 	
+	<select id="countByEmail" parameterType="String" resultType="Integer">
+		select nvl(count(*), 0)
+		from "MEMBER"
+		where "M_EMAIL" = #{mEmail}
+	</select>
+	
+	<select id="countByNickname" parameterType="String" resultType="Integer">
+		select nvl(count(*), 0)
+		from "MEMBER"
+		where "M_NICKNAME" = #{mNickname}
+	</select>
+	
 	<select id="selectByNickname" parameterType="String" resultType="memberDTO">
 		select * from "MEMBER" 
 		where "M_NICKNAME" = #{mNickname}

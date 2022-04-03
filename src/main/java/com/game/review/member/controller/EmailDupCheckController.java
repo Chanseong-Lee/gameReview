@@ -1,7 +1,5 @@
 package com.game.review.member.controller;
 
-import java.util.regex.Pattern;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,46 +10,39 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.game.review.HomeController;
+import com.game.review.member.command.MemberRegCommand;
 import com.game.review.member.service.EmailDupCheckService;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
+import com.game.review.member.validate.EmailDupValidator;
 
 @Controller
 public class EmailDupCheckController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	@Autowired
-	public EmailDupCheckService emailDubCehckService;
+	public EmailDupCheckService emailDupCheckService;
 	
 	@RequestMapping(value="/member/emailCheck")
 	@ResponseBody
-	public String emailCheck(@RequestBody String email) {
-		JsonParser parser = new JsonParser();
-		JsonElement element = parser.parse(email);
-		String emaildata = element.getAsJsonObject().get("email").getAsString();
-		//빈값 0 / 형식에러 3 / 중복 2 / 정상 1
-		if(emaildata == null || emaildata.trim().isEmpty()) {
-			//빈값
-			return "0";
-		}else {
-			String emailRegExp=
-					"^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-					+ "[A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
-			Pattern pattern = Pattern.compile(emailRegExp);
-			if(!pattern.matcher(emaildata).matches()) {
-				return "3";
-			}
-		}
+	public String emailCheck(@RequestBody MemberRegCommand mrc, Errors errors) throws Exception {
+		String email = mrc.getEmail();
+		logger.debug("data success email : " + email);
+		new EmailDupValidator().validate(mrc, errors);
 		
-		logger.debug("email : " + emaildata);
-		boolean isDup = emailDubCehckService.emailChecker(emaildata);
-		//중복이면 true, 중복아니면 false
-		logger.debug("isDup : " + isDup);
-		if(isDup) {
+		if(email == null || email.trim().isEmpty()) {
+			logger.debug("이메일 빈값=2");
 			return "2";
+		}else if(errors.hasErrors()) {
+			logger.debug("이메일 정규식에러=3");
+			return "3";
 		}
-		
-		return "1";
+		//0정상, 1중복
+		int checkerForEmail = emailDupCheckService.emailChecker(email);
+		if(checkerForEmail == 1) {
+			logger.debug("이메일중복=1");
+			return "1";
+		}else {
+			logger.debug("이메일정상!=0");
+			return "0";
+		}
 	}
-	
 }

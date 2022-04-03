@@ -13,6 +13,12 @@ public interface MemberDAO {
 	public Object selectBySeq(Long mNum);
 	public Object selectByEmail(String mEmail);
 	
+	//ajax 이메일 중복체크용
+	public int countByEmail(String mEmail);
+	
+	//ajax 닉네임 중복체크용
+	public int countByNickname(String mNickname);
+	
 	//전체 회원수
 	public int count();
 
