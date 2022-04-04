@@ -4,9 +4,9 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>로그인</title>
+<title>로그인 성공</title>
 </head>
 <body>
-로그인 구연해야함
+로그인 성공로직 구현하셈
 </body>
 </html>

@@ -33,34 +33,36 @@
 		where "M_NICKNAME" = #{mNickname}
 	</select>
 	
+	<!-- 회원가입 직후는 권한 레벨 1 -->
+	<insert id="insert" parameterType="memberDTO">
+		insert into "MEMBER"("M_NUM", "M_EMAIL", "M_PASSWORD", "M_NAME", "M_NICKNAME","M_ISVALID", "AUTH_NUM")
+		values("MEMBER_SEQ".nextval, #{mEmail}, #{mPassword}, #{mName}, #{mName}, #{mIsvalid}, (select "AUTH_NUM" from "AUTH" where "AUTH_LEVEL"=1))
+		<selectKey keyProperty="mNum" resultType="Long">
+			select nvl(max(M_NUM), 0) from "MEMBER"
+		</selectKey>
+	</insert>
+	
 	<!-- 이메일 인증키 비교해서 count가 1이상이면 인증 성공하도록 -->
 	<select id="countByValidKey" parameterType="String" resultType="Integer">
 		select count(*) from "MEMBER"
 		where "M_ISVALID"=#{validKey}
 	</select>
 	
-	<insert id="insert" parameterType="memberDTO">
-		insert into "MEMBER"("M_NUM", "M_EMAIL", "M_PASSWORD", "M_NICKNAME", "M_ISVALID" ,"M_NAME")
-		values("MEMBER_SEQ".nextval, #{mEmail}, #{mPassword}, #{mNickname},#{mIsvalid} ,#{mName})
-		<selectKey keyProperty="mNum" resultType="Long">
-			select nvl(max(M_NUM), 0) from "MEMBER"
-		</selectKey>
-	</insert>
-	
-	<delete id="delete" parameterType="Long">
-		delete from "MEMBER" 
-		where "M_NUM" = #{mNum}
-	</delete>
-	
+	<!-- 받은 이메일에서 인증 누르면 실행 인증여부는 Y로, 권한레벨은 2로 업데이트  -->
 	<update id="updateValidKey" parameterType="hashmap">
 		update "MEMBER" 
-		set "M_ISVALID" = #{validKey} 
+		set "M_ISVALID" = #{validKey}, "AUTH_NUM"=(select "AUTH_NUM" from "AUTH" where "AUTH_LEVEL"=2)
 		where "M_EMAIL"=#{email}
 	</update>
-	
+
 	<update id ="updateMember" parameterType="memberDTO">
 		update "MEMBER" 
 		set "M_NICKNAME"=#{mNickname}, "M_NAME"=#{mName} 
 		where "M_NUM"=#{mNum}
 	</update>
+	
+	<delete id="delete" parameterType="Long">
+		delete from "MEMBER" 
+		where "M_NUM" = #{mNum}
+	</delete>
 </mapper>

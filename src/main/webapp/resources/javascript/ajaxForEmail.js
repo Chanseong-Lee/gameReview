@@ -39,7 +39,7 @@ let checkEmail = function () {
         body: JSON.stringify(dataEmail),
     }).then(function(response){
     	return response.text()
-    	}).then(function(text){
+    }).then(function(text){
         console.log(text);
         // 0 = 정상, 1=중복, 2=빈값, 3=이메일형식에러
         let emailMsgSpan = document.querySelector("#emailError");

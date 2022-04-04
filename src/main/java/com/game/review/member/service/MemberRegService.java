@@ -32,13 +32,13 @@ public class MemberRegService {
 	@Autowired
 	private JavaMailSender mailSender;
 	
+	@Transactional
 	public void insertMember(MemberRegCommand mc) throws MessagingException, UnsupportedEncodingException {
 		
 		//email duplication verification
 		MemberDTO hasEmail = (MemberDTO) memberDAO.selectByEmail(mc.getEmail());
-		logger.debug("여기까지옴?");
+		
 		if(hasEmail != null) {
-			logger.error("error!");
 			throw new AlreadyExistEmailException();
 		}
 		
@@ -98,6 +98,7 @@ public class MemberRegService {
 			throw new noExistValidKeyException();
 		}
 		Map<String, String> dataValues = new HashMap<>();
+		logger.debug("에러나면 이건 출력되면 안됨");
 		dataValues.put("email", email);
 		dataValues.put("validKey", "Y");
 		//검증키가 Y이면 인증된 MEMBER

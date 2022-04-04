@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<http use-expression="true">
+	<intercept-url pattern="login*" access="isAnonymous()"/>
+	<intercept-url pattern="/**"/>
+</http>
