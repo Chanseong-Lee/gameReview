@@ -4,10 +4,9 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>로그인 성공</title>
+<title>로그인 실패</title>
 </head>
 <body>
-로그인 성공로직 구현하셈
-<a href="${pageContext.request.contextPath}/member/logout">로그아웃</a>
+실패!!!!!
 </body>
 </html>

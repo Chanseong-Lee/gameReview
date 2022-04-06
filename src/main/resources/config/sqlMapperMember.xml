@@ -3,8 +3,12 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="memberDAO">
+
+	<!-- dto는 join된 컬럼인 authlevel있으므로 select는 항상 join해서 사용할것 -->
 	<select id="selectAll" resultType="memberDTO">
-		select * from "MEMBER" order by "M_NUM"
+		select m.m_num, m.m_email, m.m_password, m.m_name, m.m_nickname, m.m_regdate, m.m_isvalid, m.m_point, at.auth_level
+		from member m, auth at
+		where m.auth_num=at.auth_num
 	</select>
 	<select id="selectBySeq" parameterType="Long" resultType="memberDTO">
 		select * from "MEMBER" 
@@ -12,16 +16,17 @@
 	</select>
 	
 	<select id="selectByEmail" parameterType="String" resultType="memberDTO">
-		select * from "MEMBER" 
-		where "M_EMAIL" = #{mEmail}
+		select m.m_num, m.m_email, m.m_password, m.m_name, m.m_nickname, m.m_regdate, m.m_isvalid, m.m_point, at.auth_level
+		from member m, auth at
+		where m.m_email=#{mEamil} and m.auth_num=at.auth_num
 	</select>
-	
+	<!-- ajax용 -->
 	<select id="countByEmail" parameterType="String" resultType="Integer">
 		select nvl(count(*), 0)
 		from "MEMBER"
 		where "M_EMAIL" = #{mEmail}
 	</select>
-	
+	<!-- ajax용 -->
 	<select id="countByNickname" parameterType="String" resultType="Integer">
 		select nvl(count(*), 0)
 		from "MEMBER"
@@ -29,8 +34,9 @@
 	</select>
 	
 	<select id="selectByNickname" parameterType="String" resultType="memberDTO">
-		select * from "MEMBER" 
-		where "M_NICKNAME" = #{mNickname}
+		select m.m_num, m.m_email, m.m_password, m.m_name, m.m_nickname, m.m_regdate, m.m_isvalid, m.m_point, at.auth_level
+		from member m, auth at
+		where m.m_nickname=#{mNickname} and m.auth_num=at.auth_num
 	</select>
 	
 	<!-- 회원가입 직후는 권한 레벨 1 -->

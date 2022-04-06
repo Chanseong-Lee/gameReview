@@ -12,7 +12,7 @@
 <script type="text/javascript">
 	var email = '${email}';
 	alert(email + '님의 이메일 인증이 완료되었습니다!\n이제 로그인이 가능합니다.\n확인버튼을 누르시면 로그인 페이지로 이동합니다.');
-	self.location="${pageContext.request.contextPath}/member/login";
+	self.location="${pageContext.request.contextPath}/member/loginForm";
 </script>
 </body>
 </html>

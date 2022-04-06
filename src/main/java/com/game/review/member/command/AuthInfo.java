@@ -3,7 +3,7 @@ package com.game.review.member.command;
 public class AuthInfo {
 	private Long mNum;
 	private String email;
-	private String name;
+	private String nickname;
 	private String password;
 	private Long authLevel;
 	
@@ -19,11 +19,11 @@ public class AuthInfo {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public String getName() {
-		return name;
+	public String getNickame() {
+		return nickname;
 	}
-	public void setName(String name) {
-		this.name = name;
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
 	}
 	public Long getAuthLevel() {
 		return authLevel;

@@ -12,6 +12,7 @@ public class AdminDTO {
 	private Timestamp adRegdate;
 	private String adKey;
 	private Long adPoint;
+	private String authLevel;
 	
 	public Long getAdNum() {
 		return adNum;
@@ -54,6 +55,12 @@ public class AdminDTO {
 	}
 	public void setAdPoint(Long adPoint) {
 		this.adPoint = adPoint;
+	}
+	public String getAuthLevel() {
+		return authLevel;
+	}
+	public void setAuthLevel(String authLevel) {
+		this.authLevel = authLevel;
 	}
 	
 	

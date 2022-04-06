@@ -31,6 +31,8 @@ public class MemberRegService {
 	private MemberDAO memberDAO;
 	@Autowired
 	private JavaMailSender mailSender;
+	@Autowired
+	private BCryptPasswordEncoder encoder;
 	
 	@Transactional
 	public void insertMember(MemberRegCommand mc) throws MessagingException, UnsupportedEncodingException {
@@ -43,7 +45,6 @@ public class MemberRegService {
 		}
 		
 		//encryption code
-		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 		String encodedPw = encoder.encode(mc.getPassword());
 		
 		//generate key for email authentication

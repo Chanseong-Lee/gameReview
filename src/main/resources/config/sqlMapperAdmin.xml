@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="adminDAO">
+
+	<!-- dto는 join된 컬럼인 authlevel있으므로 select는 항상 join해서 사용할것 -->
+	<select id="selectAllAdmin" resultType="adminDTO">
+		select ad.ad_num, ad.ad_id, ad.ad_password, ad.ad_nickname, ad.ad_regdate, ad.ad_point, at.auth_level
+		from admin ad, auth at
+		where ad.auth_num=at.auth_num
+	</select>
+	<select id="selectBySeqAdmin" parameterType="Long" resultType="adminDTO">
+		select ad.ad_num, ad.ad_id, ad.ad_password, ad.ad_nickname, ad.ad_regdate, ad.ad_point, at.auth_level
+		from admin ad, auth at
+		where ad.ad_num=#{adNum} and ad.auth_num=at.auth_num
+	</select>
+	
+	<select id="selectByIdAdmin" parameterType="String" resultType="adminDTO">
+		select ad.ad_num, ad.ad_id, ad.ad_password, ad.ad_nickname, ad.ad_regdate, ad.ad_point, at.auth_level
+		from admin ad, auth at
+		where ad.ad_id=#{adId} and ad.auth_num=at.auth_num
+	</select>
+
+</mapper>

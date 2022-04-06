@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+	<!-- 나중에 role_user용 유알엘도 추가해야됨 -->
+	<!-- spring security 4.x버전부터 csrf필터가 자동활성화되므로 토큰을 첨부하던가 ssl사용안하면 disabled속성 true해줘야함 -->
+	<security:http pattern="/**/*.js" security="none"/>
+	<security:http pattern="/**/*.css" security="none"/>
+	<security:http pattern="/images/**" security="none"/>
+	<security:http pattern="/resources/**" security="none"/>
+	<security:http auto-config="true" use-expressions="true">
+		<security:csrf disabled="true"/>
+		<security:intercept-url pattern="/member/loginFrom" access="permitAll" />
+		<security:intercept-url pattern="/member/logout" access="permitAll" />
+		<security:intercept-url pattern="/member/**" access="permitAll" />
+		<security:intercept-url pattern="/admin/**"	access="hasRole('ROLE_ADMIN')" />
+		<security:intercept-url pattern="/**" access="permitAll" />
+		<security:form-login 
+			username-parameter="email"
+			password-parameter="password"
+			login-page="/member/loginForm"
+			login-processing-url="/member/login"
+			authentication-failure-url="/member/loginFail"
+			default-target-url="/member/loginSuccess"
+		/>
+		<security:logout
+			logout-success-url="/member/logoutSuccess"
+			logout-url="/member/logout"
+			invalidate-session="true"
+		/>
+	</security:http>
+	<!-- input 태그의 name(계정) 속성 값, input 태그의 비밀번호 name 속성 값 -->
+	<!-- login-page : 로그인 화면 url / ogin-processing-url form : 태그의 action 속성 (default : /login) -->
+	<!-- default-target-url : 로그인 성공시 url -->
+	<!-- authentication-failure-url : 로그인 실패시 url (default: /login?error=1) -->
+	<!-- authentication-success-handler-ref : 로그인 성공시 default-target-url이 아닌	핸들러로 리다이렉트 -->
+	<!-- authentication-failure-handler-ref : 로그인 실패시 authentication-failure-url이 아닌 핸들러로 리다이렉트 -->
+	<!-- always-use-default-target : 무조건 핸들러가 지정한 페이지로 이동 (default: false) -->
+
+	<!-- logout-url : 로그아웃 URL -->
+	<!-- logout-success-url : 로그아웃 성공시, 이동할 URL. (default: /login?logout) -->
+	<!-- invalidate-session : 로그아웃 시, session을 무효화할 지 선택. (default: true) -->
+	<!-- delete-cookies : 로그아웃 성공시, 삭제할 쿠키 이름 지정 -->
+	<!-- success-handler-ref : 로그아웃 성공시, logout-success-url 이 아닌 핸들러로 리다이렉트 -->
+
+	<security:authentication-manager>
+		<security:authentication-provider user-service-ref="loginUserDetailsService">
+			<security:password-encoder ref="encoder"/>
+		</security:authentication-provider>
+	</security:authentication-manager>
+	<!-- 핸들러 빈 추가 -->
+	<bean id="loginUserDetailsService" class="com.game.review.member.service.LoginUserDetailsService"/>
+	<bean id="encoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+	
+	<context:annotation-config/>
+	<context:component-scan base-package="com.game.review"/>
+</beans>

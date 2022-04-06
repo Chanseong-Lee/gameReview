@@ -26,8 +26,8 @@ public class LoginService {
 		info.setmNum(member.getmNum());
 		info.setEmail(member.getmEmail());
 		info.setPassword(member.getmPassword());
-		info.setName(member.getmName());
-		info.setAuthLevel(member.getAuthNum());
+		info.setNickname(member.getmNickname());
+		//info.setAuthLevel(member.getAuthNum());
 		return info;
 	}
 }

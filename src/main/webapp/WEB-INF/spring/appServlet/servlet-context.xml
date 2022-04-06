@@ -21,14 +21,6 @@
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
 	
-	<context:component-scan base-package="com.game.review" />
-	
-	<!-- Interceptor -->
-	<interceptors>
-		<interceptor>
-			<mapping path="/notMadeYet"/>
-			<beans:bean class="com.game.review.member.interceptor.LoginAuthInterceptor"></beans:bean>
-		</interceptor>
-	</interceptors>
-	
+	<context:component-scan base-package="com.game.review" />	
+	<context:annotation-config/>
 </beans:beans>

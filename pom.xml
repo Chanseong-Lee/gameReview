@@ -14,6 +14,7 @@
 		<org.aspectj-version>1.8.13</org.aspectj-version>
 		<org.slf4j-version>1.6.6</org.slf4j-version>
 		<log4j-version>2.17.1</log4j-version>
+		<spring-security-version>4.2.20.RELEASE</spring-security-version>
 	</properties>
 	<dependencies>
 		<!-- Spring -->
@@ -181,19 +182,24 @@
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-web</artifactId>
-			<version>4.2.20.RELEASE</version>
+			<version>${spring-security-version}</version>
 		</dependency>
 		<!--스프링시큐리티 core 라이브러리 -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-core</artifactId>
-			<version>4.2.20.RELEASE</version>
+			<version>${spring-security-version}</version>
 		</dependency>
 		<!--스프링시큐리티 config 라이브러리 -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-config</artifactId>
-			<version>4.2.20.RELEASE</version>
+			<version>${spring-security-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-taglibs</artifactId>
+			<version>${spring-security-version}</version>
 		</dependency>
 		<!-- multipart -->
 		<dependency>

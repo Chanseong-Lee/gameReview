@@ -13,7 +13,7 @@ public class MemberDTO {
 	private Timestamp mRegdate;
 	private String mIsvalid;
 	private Long mPoint;
-	private Long authNum;
+	private String authLevel;
 	
 	public Long getmNum() {
 		return mNum;
@@ -63,13 +63,10 @@ public class MemberDTO {
 	public void setmPoint(Long mPoint) {
 		this.mPoint = mPoint;
 	}
-	public Long getAuthNum() {
-		return authNum;
+	public String getAuthLevel() {
+		return authLevel;
 	}
-	public void setAuthNum(Long authNum) {
-		this.authNum = authNum;
-	}
-	
-	
-	
+	public void setAuthLevel(String authLevel) {
+		this.authLevel = authLevel;
+	}	
 }
