@@ -4,10 +4,9 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>로그인 성공</title>
+<title>Access Denied</title>
 </head>
 <body>
-로그인 성공로직 구현하셈
-<a href="${pageContext.request.contextPath}/member/logout">로그아웃</a>
+<h1>Access Denied</h1>
 </body>
 </html>

@@ -4,8 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.game.review.member.dao.MemberDAO;
-import com.game.review.member.exception.AlreadyExistEmailException;
-import com.game.review.member.exception.AlreadyExistNicknameException;
 
 @Service
 public class EmailDupCheckService {

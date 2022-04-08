@@ -34,7 +34,7 @@ public class MemberRegController {
 	//into the join form
 	@RequestMapping(value="/member/regist", method=RequestMethod.GET)
 	public String showMemberRegForm(@ModelAttribute("mrc")MemberRegCommand memberRegCommand) {
-		return "member/memberRegForm";
+		return "member/reg/memberRegForm";
 	}
 	
 	//on submit, add a member to DB and send email to the member -> redirect to the success page
@@ -45,18 +45,18 @@ public class MemberRegController {
 		
 		try {
 			if(errors.hasErrors()) {
-				return "member/memberRegForm";
+				return "member/reg/memberRegForm";
 			}
 			memberRegService.insertMember(memberRegCommand);
 			
 			rttr.addAttribute("nickname", memberRegCommand.getNickname());
 			rttr.addAttribute("name", memberRegCommand.getName());
 			rttr.addAttribute("email", memberRegCommand.getEmail());
-			return "redirect:/member/registSuccess";
+			return "redirect:/member/reg/registSuccess";
 		} catch (AlreadyExistEmailException e ) {
 			logger.error("이미존재하는 이메일");
 			errors.rejectValue("email", "dupEmail");
-			return "member/memberRegForm";
+			return "member/reg/memberRegForm";
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 			return "exceptions/encodingEx";

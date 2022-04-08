@@ -15,12 +15,23 @@ public class LoginUserDetails extends User {
 	
 	private Long num;
 	private String nickname;
+	private String name;
+	private Long point;
 	
 	public LoginUserDetails(String username, String password, Collection<? extends GrantedAuthority> authorities) {
 		super(username, password, authorities);
 	}
+	
+	@Override
+	public String getUsername() {
+		return super.getUsername();
+	}
 
-
+	@Override
+	public String getPassword() {
+		return super.getPassword();
+	}
+	
 	public Long getNum() {
 		return num;
 	}
@@ -38,6 +49,26 @@ public class LoginUserDetails extends User {
 
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
+	}
+
+
+	public String getName() {
+		return name;
+	}
+
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+
+	public Long getPoint() {
+		return point;
+	}
+
+
+	public void setPoint(Long point) {
+		this.point = point;
 	}
 
 

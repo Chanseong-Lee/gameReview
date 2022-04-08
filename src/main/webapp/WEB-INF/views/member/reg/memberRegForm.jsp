@@ -58,7 +58,8 @@ td {
 				</td>
 			</tr>
 		</table>
-		<input type="submit" id="submit" value="회원가입">
+		<input type="submit" id="submit" value="회원가입">&nbsp;&nbsp;
+		<input type="button" value="메인으로" onclick="location.href='${pageContext.request.contextPath}/game/main'">
 	</form:form>
 
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/javascript/ajaxForEmail.js"></script>

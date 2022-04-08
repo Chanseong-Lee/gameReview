@@ -12,26 +12,46 @@
 	<security:http pattern="/**/*.css" security="none"/>
 	<security:http pattern="/images/**" security="none"/>
 	<security:http pattern="/resources/**" security="none"/>
-	<security:http auto-config="true" use-expressions="true">
+	
+	<security:http auto-config="true" use-expressions="true" once-per-request="false">
+		<security:anonymous enabled="true"/>
 		<security:csrf disabled="true"/>
-		<security:intercept-url pattern="/member/loginFrom" access="permitAll" />
-		<security:intercept-url pattern="/member/logout" access="permitAll" />
+		<security:intercept-url pattern="/member/loginForm" access="permitAll" />
+		<security:intercept-url pattern="/member/logoutSuccess" access="permitAll" />
+		<security:intercept-url pattern="/member/logout" access="hasAnyRole('ROLE_USER, ROLE_ADMIN')" />
+		<security:intercept-url pattern="/member/update" access="hasAnyRole('ROLE_USER, ROLE_ADMIN')" />
+		<security:intercept-url pattern="/member/delete" access="hasAnyRole('ROLE_USER, ROLE_ADMIN')" />
+		
 		<security:intercept-url pattern="/member/**" access="permitAll" />
 		<security:intercept-url pattern="/admin/**"	access="hasRole('ROLE_ADMIN')" />
 		<security:intercept-url pattern="/**" access="permitAll" />
+		<security:access-denied-handler ref="loginAccessDeniedHandler"/>
+		<!-- default-target-url="/member/loginSuccess" -->
 		<security:form-login 
 			username-parameter="email"
 			password-parameter="password"
 			login-page="/member/loginForm"
 			login-processing-url="/member/login"
-			authentication-failure-url="/member/loginFail"
-			default-target-url="/member/loginSuccess"
+			authentication-failure-handler-ref="loginFailureHandler"
+			authentication-success-handler-ref="loginSuccessHandler"
+		
 		/>
 		<security:logout
-			logout-success-url="/member/logoutSuccess"
 			logout-url="/member/logout"
-			invalidate-session="true"
-		/>
+			logout-success-url="/member/logoutSuccess"
+			invalidate-session="false"
+			delete-cookies="JSESSIONID"
+		/><!-- invalidate-session값이 true면 로그아웃요청후 세션이 없어지기때문에 세션 관리의 invalid-session-url이 호출되어버림 -->
+		
+		<security:session-management invalid-session-url="/member/loginForm"><!-- invalid-session-url : 세션끊겼을때 이동할 페이지 -->
+			<security:concurrency-control 
+				max-sessions="1" 
+				expired-url="/member/loginForm" 
+				error-if-maximum-exceeded="false" 
+			/><!-- 최대허용가능 중복세션, 중복로그인일어났을때 이동할 페이지(두번째 사용자가 로그인해서 첫번째 끊겼을때 이동되는 페이지), 
+				중복로그인 세션 막는 옵션(true : 첫번째 사용자 로그인 후 두번째 사용자 로그인시도하면 두번째는 실패/ false : 두번째 사용자가 로그인하면 첫번째 세션 끊김) -->
+		</security:session-management>
+		
 	</security:http>
 	<!-- input 태그의 name(계정) 속성 값, input 태그의 비밀번호 name 속성 값 -->
 	<!-- login-page : 로그인 화면 url / ogin-processing-url form : 태그의 action 속성 (default : /login) -->
@@ -55,6 +75,12 @@
 	<!-- 핸들러 빈 추가 -->
 	<bean id="loginUserDetailsService" class="com.game.review.member.service.LoginUserDetailsService"/>
 	<bean id="encoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+	<bean id="loginAccessDeniedHandler" class="com.game.review.member.security.LoginAccessDeniedHandler"/>
+	<!-- login 실패시 loginForm으로 forwarding -->
+	<bean id="loginFailureHandler" class="com.game.review.member.security.LoginFailureHandler"/>
+	
+	<!-- login 성공시 작동 admin이면 관리자 페이지, 일반유저면 로그인성공페이지로 Redirect -->
+	<bean id="loginSuccessHandler" class="com.game.review.member.security.LoginSuccessHandler"/>
 	
 	<context:annotation-config/>
 	<context:component-scan base-package="com.game.review"/>

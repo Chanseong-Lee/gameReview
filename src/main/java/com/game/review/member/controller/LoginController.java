@@ -1,25 +1,19 @@
 package com.game.review.member.controller;
 
+import java.security.Principal;
+
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.game.review.HomeController;
-import com.game.review.member.command.AuthInfo;
-import com.game.review.member.command.LoginCommand;
-import com.game.review.member.exception.NoEmailExistException;
-import com.game.review.member.exception.PasswordNotMatchingException;
-import com.game.review.member.service.LoginService;
-import com.game.review.member.validate.LoginCommandValidator;
 
 @Controller
 public class LoginController {
@@ -71,29 +65,43 @@ public class LoginController {
 	 * */
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
-	@Autowired
-	private LoginService loginService;
 	
-	@RequestMapping(value = "member/loginForm", method=RequestMethod.GET)
-	public String showLoginForm() {// 쿠키추가설정해줘야됨
-		// 내일은 여기 쿠키설정!
-		return "member/loginForm";
+	@RequestMapping(value = "member/loginForm")//로그인 실패 로직이 리다이렉트가 아닌 포워딩을 하므로 로그인 요청의 post도 받음. 그래서 메소드방법 둘다 가능하게설정
+	public String showLoginForm(Model model , @CookieValue(value="rememberId", required = false) Cookie cookie) {// 쿠키추가설정해줘야됨
+		
+		if(cookie != null) {
+			model.addAttribute("email", cookie.getValue());
+			model.addAttribute("checked", "checked");
+		}
+		
+		return "member/login/loginForm";
 	}
 	
 	@RequestMapping(value="member/loginSuccess", method=RequestMethod.GET)
 	public String loginSuccess() {
-		return "member/loginSuccess";
+		return "member/login/loginSuccess";
 	}
+	
 	@RequestMapping(value="member/loginFail", method=RequestMethod.GET)
 	public String loginFail() {
-		return "member/loginFail";
+		return "member/login/loginFail";
 	}
+	
 	@RequestMapping(value="member/logoutSuccess", method=RequestMethod.GET)
 	public String logoutSuccess() {
-		return "member/logoutSuccess";
+		logger.info("로그아웃 석세스 요청됨?");
+		return "member/login/logoutSuccess";
 	}
+	
+	@RequestMapping(value="/exceptions/accessError")
+	public String accessDenied(Authentication auth, Model model) {
+		
+		logger.info("access denied : " + auth);
+		return "exceptions/accessError";
+	}
+	
 	/*
-	//spring security는 post요청을 자동으로 만들어줌
+	//spring security는 post요청을 자동으로 만들어주기 때문에 여기서 구현 안함
 	@RequestMapping(value = "member/login", method = RequestMethod.POST)
 	public String submitLogin(
 			@ModelAttribute("LoginCommand") LoginCommand loginCommand, 
@@ -133,4 +141,14 @@ public class LoginController {
 		}
 	}
 	 */
+
+//	나중에 기존요청 로그인후 진행하도록 할거면 이곳 활용	
+//	/* 사용자가 서버에 무언가를 요청할때 헤더의 Referer에 URI가 세팅됨.
+//	 * 요청 시점의 사용자 URL정보를 세션에 담아서 전달(잘 지워줘야함)
+//	 * 로그인이 틀려서 다시 하면 오청 시점의 URI가 로그인페이지가 되므로 조건문으로 막아줘야한다.
+//	 * */
+//	String url = request.getHeader("Referer");
+//	if(url.contains("/member/loginForm")) {
+//		request.getSession().setAttribute("blockLoginPage", url); //이 세션의 속성값은 로그인 핸들러에서 처리
+//	}
 }
