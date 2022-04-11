@@ -73,4 +73,19 @@ public class MemberDAOImpl implements MemberDAO {
 		return sqlSessionTemplate.selectOne("countByValidKey", validKey);
 	}
 
+	@Override
+	public int countByEmailAndName(Map<String, String> map) {
+		return sqlSessionTemplate.selectOne("countByEmailAndName", map);
+	}
+
+	@Override
+	public Object selectByEmailAndName(Map<String, String> map) {
+		return sqlSessionTemplate.selectOne("selectByEmailAndName", map);
+	}
+
+	@Override
+	public int updateTempPassword(MemberDTO memberDTO) {
+		return sqlSessionTemplate.update("updateTempPassword", memberDTO);
+	}
+
 }

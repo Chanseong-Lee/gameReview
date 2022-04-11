@@ -13,7 +13,6 @@
 	<li>${lud.nickname }</li>
 	<li>${lud.num }</li>
 	<li>${lud.point }</li>
-	
 </ol>
 
 </body>

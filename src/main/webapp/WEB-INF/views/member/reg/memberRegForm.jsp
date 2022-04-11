@@ -24,8 +24,7 @@ td {
 		<table>
 			<tr>
 				<td>이메일</td>
-				<td><form:input id="email" path="email" oninput="checkEmail()" />&nbsp;<input
-					type="button" value="중복확인" onclick="checkEmail()"><br>
+				<td><form:input id="email" path="email" oninput="checkEmail()" />&nbsp;
 					<span class="errorAfterSubmit"><form:errors path="email" /></span>
 					<span id="emailError"></span>
 				</td>

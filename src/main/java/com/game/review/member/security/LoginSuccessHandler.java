@@ -68,6 +68,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler{
 		while (list.hasMoreElements()) {
 			System.out.println("세션이름 : "+list.nextElement());
 		}
+		
 		response.sendRedirect(url);
 		
 		/*

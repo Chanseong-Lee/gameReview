@@ -12,7 +12,7 @@
 </head>
 <body>
 <sec:authorize access="isAuthenticated()">
-회원정보 수정<br>
+<a href="${pageContext.request.contextPath}/member/update">회원정보 수정</a><br>
 <a href="${pageContext.request.contextPath}/member/logout">로그아웃</a>
 </sec:authorize>
 <sec:authorize access="!isAuthenticated()">

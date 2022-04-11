@@ -13,6 +13,12 @@ public interface MemberDAO {
 	public Object selectBySeq(Long mNum);
 	public Object selectByEmail(String mEmail);
 	
+	//아이디 찾기
+	public int countByEmailAndName(Map<String, String> map);
+	
+	//비밀번호찾기
+	public Object selectByEmailAndName(Map<String, String> map);
+	
 	//ajax 이메일 중복체크용
 	public int countByEmail(String mEmail);
 	
@@ -27,6 +33,9 @@ public interface MemberDAO {
 	
 	//수정(마이페이지에서)
 	public int update(MemberDTO memberDTO);
+	
+	//임시비밀번호발급
+	public int updateTempPassword(MemberDTO memberDTO);
 	
 	//삭제(탈퇴)
 	public int delete(Long mNum);

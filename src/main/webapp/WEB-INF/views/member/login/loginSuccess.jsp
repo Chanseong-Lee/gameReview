@@ -16,11 +16,13 @@
 	<sec:authentication property="name" />님 안녕하세요 ^^<br>
 	실제이름은 <sec:authentication property="principal.name" />님 안녕하세요 ^^<br>
 	로그인 실패하면 여기 위에는 나오지 않음
-	<a href="${pageContext.request.contextPath}/member/logout">로그아웃</a>
+	<a href="${pageContext.request.contextPath}/member/logout">로그아웃</a><br>
+	<a href="${pageContext.request.contextPath}/game/main">메인으로</a>
 </sec:authorize>
 <sec:authorize access="!isAuthenticated()">
 	로그인 실패함<br>
-	<a href="${pageContext.request.contextPath}/member/loginForm">로그인하러가기</a>
+	<a href="${pageContext.request.contextPath}/member/loginForm">로그인하러가기</a><br>
+	<a href="${pageContext.request.contextPath}/game/main">메인으로</a>
 </sec:authorize>
 </body>
 </html>

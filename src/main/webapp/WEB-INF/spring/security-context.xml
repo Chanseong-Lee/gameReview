@@ -12,7 +12,7 @@
 	<security:http pattern="/**/*.css" security="none"/>
 	<security:http pattern="/images/**" security="none"/>
 	<security:http pattern="/resources/**" security="none"/>
-	
+	<!-- auto-config:필터관련 디폴트 자동생성, use-expressions: 권한 표현식사용, once-per-request: 포워딩되었을때도 필터를  거칠지(false해야 forwarding때 문제없다) -->
 	<security:http auto-config="true" use-expressions="true" once-per-request="false">
 		<security:anonymous enabled="true"/>
 		<security:csrf disabled="true"/>
@@ -34,15 +34,14 @@
 			login-processing-url="/member/login"
 			authentication-failure-handler-ref="loginFailureHandler"
 			authentication-success-handler-ref="loginSuccessHandler"
-		
 		/>
 		<security:logout
 			logout-url="/member/logout"
-			logout-success-url="/member/logoutSuccess"
+			logout-success-url="/game/main"
 			invalidate-session="false"
-			delete-cookies="JSESSIONID"
+			delete-cookies="JSESSIONID,SPRING_SECURITY_REMEMBER_ME_COOKIE"
 		/><!-- invalidate-session값이 true면 로그아웃요청후 세션이 없어지기때문에 세션 관리의 invalid-session-url이 호출되어버림 -->
-		
+		<security:remember-me key="hsweb" token-validity-seconds="604800" authentication-success-handler-ref="loginSuccessHandler"/>
 		<security:session-management invalid-session-url="/member/loginForm"><!-- invalid-session-url : 세션끊겼을때 이동할 페이지 -->
 			<security:concurrency-control 
 				max-sessions="1" 
