@@ -11,7 +11,10 @@ import com.game.review.member.command.MemberUpdateCommand;
 import com.game.review.member.dao.MemberDAO;
 import com.game.review.member.dto.MemberDTO;
 import com.game.review.member.exception.AlreadyExistNicknameException;
+import com.game.review.member.exception.NoNewPasswordException;
 import com.game.review.member.exception.NoSessionDbMatchException;
+import com.game.review.member.exception.NoValueException;
+import com.game.review.member.exception.PasswordNotMatchingException;
 @Service
 public class MemberUpdateService {
 	
@@ -37,6 +40,31 @@ public class MemberUpdateService {
 		if(res != 1) {
 			throw new NoSessionDbMatchException();
 		}
+	}
+	
+	public String updatePwd(String newPassword, String confirmPassword, String email, String oldPassword) throws NoValueException, PasswordNotMatchingException, NoNewPasswordException {
+		
+		if(newPassword.trim().isEmpty() || newPassword == null) {
+			throw new NoValueException();
+		}
+		
+		if(encoder.matches(newPassword, oldPassword)) {
+			throw new NoNewPasswordException();
+		}
+		
+		if(!newPassword.equals(confirmPassword)) {
+			throw new PasswordNotMatchingException();
+		}
+		
+		
+		String encodedPwd = encoder.encode(newPassword);
+		MemberDTO memberDTO = new MemberDTO();
+		memberDTO.setmEmail(email);
+		memberDTO.setmPassword(encodedPwd);
+		int res = memberDAO.updatePassword(memberDTO);
+		
+		return Integer.toString(res);
+		
 	}
 	
 	public boolean auth(String inputPwd, String sessionPwd) {

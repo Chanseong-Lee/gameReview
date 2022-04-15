@@ -3,7 +3,11 @@ package com.game.review.member.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,11 +18,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.game.review.HomeController;
+import com.game.review.member.command.ChangePasswordCommand;
 import com.game.review.member.command.LoginUserDetails;
 import com.game.review.member.command.MemberUpdateCommand;
 import com.game.review.member.command.PasswordCommand;
 import com.game.review.member.exception.AlreadyExistNicknameException;
+import com.game.review.member.exception.NoNewPasswordException;
 import com.game.review.member.exception.NoSessionDbMatchException;
+import com.game.review.member.exception.NoValueException;
+import com.game.review.member.exception.PasswordNotMatchingException;
 import com.game.review.member.service.MemberUpdateService;
 import com.game.review.member.validate.MemberUpdateCommandValidator;
 
@@ -26,6 +34,9 @@ import com.game.review.member.validate.MemberUpdateCommandValidator;
 public class MemberUpdateController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+	
+	@Autowired
+	private AuthenticationManager authenticationManager;
 	
 	@Autowired
 	private MemberUpdateService memberUpdateService;
@@ -83,6 +94,47 @@ public class MemberUpdateController {
 		}
 	}
 	
+	//ajax로 비밀번호 변경
+	@RequestMapping(value="member/update/ajaxPwdUpdate", method=RequestMethod.POST)
+	@ResponseBody
+	public String changePwd(
+			@RequestBody 
+			ChangePasswordCommand changePasswordCommand, 
+			@AuthenticationPrincipal 
+			LoginUserDetails loginUserDetails) throws Exception {
+		logger.info("password from input : " + changePasswordCommand.getPassword());
+		logger.info("confirmPassword from input : " + changePasswordCommand.getConfirmPassword());
+		logger.info("로그인된 계정명 : " + loginUserDetails.getUsername());
+		//성공 = 1, 실패 = 0, 불일치 = 2, 빈값 =  3, 기존비밀번호와 동일함 = 4
+		try {
+			String res = memberUpdateService.updatePwd(
+					changePasswordCommand.getPassword(), 
+					changePasswordCommand.getConfirmPassword(), 
+					loginUserDetails.getUsername(),
+					loginUserDetails.getPassword()
+					);
+			
+			//세션도 수정
+			Authentication authentication = authenticationManager.authenticate(
+					new UsernamePasswordAuthenticationToken(
+							loginUserDetails.getUsername(), changePasswordCommand.getPassword()
+							)
+					);
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+			logger.info("authentication.getCredentials() : " +authentication.getCredentials() );
+			return res;
+		}catch(PasswordNotMatchingException e) {
+			logger.error("비밀번호 불일치!");
+			return "2";
+		}catch(NoValueException e) {
+			logger.error("빈값!");
+			return "3";
+		}catch(NoNewPasswordException e) {
+			logger.error("기존 비밀번호와 동일!");
+			return "4";
+		}
+	}
+	
 	
 	
 	
@@ -128,7 +180,6 @@ public class MemberUpdateController {
 			errors.rejectValue("password", "passwordNotMatch");
 			return "member/update/authForm";
 		}
-		
 		return "member/update/authSuccess";
 	}
 }

@@ -2,7 +2,7 @@ package com.game.review.member.command;
 
 public class PasswordCommand {
 	private String password;
-
+	
 	public String getPassword() {
 		return password;
 	}

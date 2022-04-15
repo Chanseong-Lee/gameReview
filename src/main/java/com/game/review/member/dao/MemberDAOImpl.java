@@ -86,5 +86,10 @@ public class MemberDAOImpl implements MemberDAO {
 	public int updateTempPassword(MemberDTO memberDTO) {
 		return sqlSessionTemplate.update("updateTempPassword", memberDTO);
 	}
+	
+	@Override
+	public int updatePassword(MemberDTO memberDTO) {
+		return sqlSessionTemplate.update("updatePassword", memberDTO);
+	}
 
 }

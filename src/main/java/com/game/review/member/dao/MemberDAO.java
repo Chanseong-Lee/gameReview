@@ -36,6 +36,9 @@ public interface MemberDAO {
 	
 	//임시비밀번호발급
 	public int updateTempPassword(MemberDTO memberDTO);
+
+	//비밀번호 수정
+	public int updatePassword(MemberDTO memberDTO);
 	
 	//인증키
 	public int updateValidKey(Map<String, String> dataValues);

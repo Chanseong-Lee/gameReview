@@ -66,7 +66,7 @@
 	<!-- delete-cookies : 로그아웃 성공시, 삭제할 쿠키 이름 지정 -->
 	<!-- success-handler-ref : 로그아웃 성공시, logout-success-url 이 아닌 핸들러로 리다이렉트 -->
 
-	<security:authentication-manager erase-credentials="false" >
+	<security:authentication-manager alias="authenticationManager" erase-credentials="false" >
 		<security:authentication-provider user-service-ref="loginUserDetailsService">
 			<security:password-encoder ref="encoder"/>
 		</security:authentication-provider>

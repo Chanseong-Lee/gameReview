@@ -37,146 +37,161 @@ td{
 <br><br>
 <article></article>
 
-<%--
-<form:form action="${pageContext.request.contextPath}/member/update/update" commandName="updateCommand" method="post">
-<table>
-	<tr>
-		<td colspan="2">
-			<div id="prifileImgBox">
-				이미지 추가할 예정
-			</div>
-		</td>
-	</tr>
-	<tr>
-		<td>이메일 계정</td>
-		<td>
-			<sec:authentication property="principal.username"/>
-		</td>
-	</tr>
-	<tr>
-		<td>이름</td>
-		<td>
-			<sec:authentication property="principal.name"/>
-		</td>
-	</tr>
-	<tr>
-		<td>닉네임</td>
-		<td>
-			<input type="text" name="nickname" value="<sec:authentication property="principal.nickname"/>"><br>
-			<form:errors path="nickname"></form:errors>
-		</td>
-	</tr>
-</table>
-<input type="submit" id="submit" value="변경사항 저장">
-<button type="button" onclick="location.href='${pageContext.request.contextPath}/member/update/profile'">프로필 화면으로</button>
-</form:form>
- --%>
- 
-<%--
-<form:form action="${pageContext.request.contextPath}/member/update/updatePwd" commandName="updateCommand" method="post">
-<table>
-	<tr>
-		<th colspan="2">
-			비밀번호 수정
-		</th>
-	</tr>
-	<tr>
-		<td>비밀번호</td>
-		<td>	
-			<input type="password" name="password" placeholder="새 비밀번호 입력"><br>
-		</td>
-	</tr>
-	<tr>
-		<td>비밀번호 확인</td>
-		<td>
-			<input type="password" name="passwordConfirm" placeholder="비밀번호 확인"><br>
-			<span id="errorMsg"><form:errors path="password"/></span>
-		</td>
-	</tr>
-</table><br>
-<div id="success"></div><br>
-<input type="submit" id="submit" value="변경사항 저장">
-<button type="button" onclick="location.href='${pageContext.request.contextPath}/member/update/profile'">프로필 화면으로</button>
- --%>
- 
 <script type="text/javascript">
 window.onload = fetchPage('ajaxMemberUpdateForm');
 
 function fetchPage(name) {
-    fetch(name).then(function (response) {
-      response.text().then(function (text) {
-        document.querySelector('article').innerHTML = text;
-      });
-    });
- }
+	fetch(name).then(function (response) {
+		response.text().then(function (text) {
+			document.querySelector('article').innerHTML = text;
+		});
+	});
+}
 
 let nicknameChecker = 0;
 
-
-let updateBtn = function(){
-	let nicknameValue = document.querySelector("#nickname").value;
+let updateBtn = function () {
+	let nicknameMsgSpan = document.querySelector("#nicknameError");
+	let nicknameInput = document.querySelector("#nickname");
+	let nicknameValue = nicknameInput.value;
 	console.log("닉네임 : " + nicknameValue);
 	const dataMember = {
-		nickname : nicknameValue,	
+		nickname: nicknameValue,
 	};
-	
-	fetch('ajaxMemberUpdate', {
-		method:"POST",
-		headers:{
-			"Content-Type": "application/json; charset=utf-8"
-		},
-		body: JSON.stringify(dataMember),
-	}).then(function(response){
-		return response.text();
-	}).then(function(text){
-		console.log(text);
-		// 0 = 정상, 1=중복, 2=빈값, 3=이메일형식에러
-		let nicknameMsgSpan = document.querySelector("#nicknameError");
-        let nicknameInput = document.querySelector("#nickname");
-        if(!nicknameValue.trim()){
-        	nicknameMsgSpan.innerHTML = "필수항목입니다.";
-        	nicknameMsgSpan.style.color = "red";
-        	nicknameInput.style.backgroundColor="#FFCECE";
-        	document.querySelector("#success").innerHTML = "";
-        }else if(nicknameValue.length < 2 || nicknameValue.length > 11){
-       		nicknameMsgSpan.innerHTML = "닉네임은 한글, 영문 2~10자입니다.";
-        	nicknameMsgSpan.style.color = "red";
-        	nicknameInput.style.backgroundColor="#FFCECE";
-        	document.querySelector("#success").innerHTML = "";
-       	}else if(nicknameValue.search(/\s/) != -1){
-       		nicknameMsgSpan.innerHTML = "닉네임은 공백을 포함할 수 없습니다.";
-        	nicknameMsgSpan.style.color = "red";
-        	nicknameInput.style.backgroundColor="#FFCECE";
-        	document.querySelector("#success").innerHTML = "";
-       	}else if(!isNickname(nicknameValue)){
-       		nicknameMsgSpan.innerHTML = "닉네임은 한글, 영문, 숫자만 가능합니다.";
-        	nicknameMsgSpan.style.color = "red";
-        	nicknameInput.style.backgroundColor="#FFCECE";
-        	document.querySelector("#success").innerHTML = "";
-       	}else{
-       		if(text=='0'){
-    			//정상
-       			nicknameMsgSpan.innerHTML = "";
-        		//nicknameMsgSpan.style.color = "";
-	          	nicknameInput.style.backgroundColor="white";
-	            document.querySelector("#success").innerHTML = "변경사항이 저장되었습니다.";
-	            document.querySelector("#success").style.color="green";
-    		}else if(text=='1'){
-    			//중복
-    			nicknameMsgSpan.innerHTML = "이미 사용중인 닉네임입니다.";
-    	    	nicknameMsgSpan.style.color = "red";
-        		nicknameInput.style.backgroundColor="#FFCECE";
-        		document.querySelector("#success").innerHTML = "";
-    		}else if(text=='2'){
-    			//빈값
-    			nicknameMsgSpan.innerHTML = "필수항목입니다.";
-            	nicknameMsgSpan.style.color = "red";
-            	nicknameInput.style.backgroundColor="#FFCECE";
-            	document.querySelector("#success").innerHTML = "";
-    		}
-       	}
-	
-	})
+
+	if (!nicknameValue.trim()) {
+		nicknameMsgSpan.innerHTML = "필수항목입니다.";
+		nicknameMsgSpan.style.color = "red";
+		nicknameInput.style.backgroundColor = "#FFCECE";
+		document.querySelector("#success").innerHTML = "";
+	} else if (nicknameValue.length < 2 || nicknameValue.length > 11) {
+		nicknameMsgSpan.innerHTML = "닉네임은 한글, 영문 2~10자입니다.";
+		nicknameMsgSpan.style.color = "red";
+		nicknameInput.style.backgroundColor = "#FFCECE";
+		document.querySelector("#success").innerHTML = "";
+	} else if (nicknameValue.search(/\s/) != -1) {
+		nicknameMsgSpan.innerHTML = "닉네임은 공백을 포함할 수 없습니다.";
+		nicknameMsgSpan.style.color = "red";
+		nicknameInput.style.backgroundColor = "#FFCECE";
+		document.querySelector("#success").innerHTML = "";
+	} else if (!isNickname(nicknameValue)) {
+		nicknameMsgSpan.innerHTML = "닉네임은 한글, 영문, 숫자만 가능합니다.";
+		nicknameMsgSpan.style.color = "red";
+		nicknameInput.style.backgroundColor = "#FFCECE";
+		document.querySelector("#success").innerHTML = "";
+	} else {
+		fetch('ajaxMemberUpdate', {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json; charset=utf-8"
+			},
+			body: JSON.stringify(dataMember),
+		}).then(function (response) {
+			return response.text();
+		}).then(function (text) {
+			console.log(text);
+			// 0 = 정상, 1=중복, 2=빈값, 3=이메일형식에러
+
+			if (text == '0') {
+				//정상
+				nicknameMsgSpan.innerHTML = "";
+				//nicknameMsgSpan.style.color = "";
+				nicknameInput.style.backgroundColor = "white";
+				document.querySelector("#success").innerHTML = "변경사항이 저장되었습니다.";
+				document.querySelector("#success").style.color = "green";
+			} else if (text == '1') {
+				//중복
+				nicknameMsgSpan.innerHTML = "이미 사용중인 닉네임입니다.";
+				nicknameMsgSpan.style.color = "red";
+				nicknameInput.style.backgroundColor = "#FFCECE";
+				document.querySelector("#success").innerHTML = "";
+			} else if (text == '2') {
+				//빈값
+				nicknameMsgSpan.innerHTML = "필수항목입니다.";
+				nicknameMsgSpan.style.color = "red";
+				nicknameInput.style.backgroundColor = "#FFCECE";
+				document.querySelector("#success").innerHTML = "";
+			}
+		})
+	}
+}
+
+let updatePwdBtn = function () {
+	let passwordInput = document.querySelector("#password");
+	let passwordValue = passwordInput.value;
+	let passwordErrorMsgSpan = document.querySelector("#passwordErrorMsg");
+	let confirmPasswordInput = document.querySelector("#confirmPassword");
+	let confirmPasswordValue = confirmPasswordInput.value;
+	let confirmPasswordErrorMsgSpan = document.querySelector("#confirmPasswordErrorMsg");
+	console.log("password : " + passwordValue);
+	console.log("confirmPassword : " + confirmPasswordValue);
+	const dataPwd = {
+		password : passwordValue,
+		confirmPassword : confirmPasswordValue,
+	}
+	if (!passwordValue.trim()) {
+		passwordErrorMsgSpan.innerHTML = "필수항목입니다.";
+		passwordErrorMsgSpan.style.color = "red";
+		passwordInput.style.backgroundColor = "#FFCECE";
+		document.querySelector("#success").innerHTML = "";
+		confirmPasswordErrorMsgSpan.innerHTML = ""
+		confirmPasswordInput.style.backgroundColor = "white";
+	} else {
+		if (passwordValue != confirmPasswordValue) {
+			passwordErrorMsgSpan.innerHTML = "";
+			passwordInput.style.backgroundColor = "white";
+			confirmPasswordErrorMsgSpan.innerHTML = "비밀번호가 일치하지 않습니다."
+			confirmPasswordErrorMsgSpan.style.color = "red";
+			confirmPasswordInput.style.backgroundColor = "#FFCECE";
+			document.querySelector("#success").innerHTML = "";
+		} else {
+			//fetch go
+			fetch('ajaxPwdUpdate', {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json; charset=utf-8"
+				},
+				body: JSON.stringify(dataPwd),
+			}).then(function(response){
+				return response.text()
+			}).then(function(text){
+				//성공 = '1', 실패 = '0', 불일치='2', 빈값 = '3', 기존과 동일='4'
+				if(text == '1'){
+					passwordErrorMsgSpan.innerHTML = "";
+					passwordInput.style.backgroundColor = "white";
+					confirmPasswordErrorMsgSpan.innerHTML = ""
+					confirmPasswordInput.style.backgroundColor = "white";
+					document.querySelector("#success").innerHTML = "변경사항이 저장되었습니다.";
+					document.querySelector("#success").style.color = "green";
+				}else if(text == '2'){
+					passwordErrorMsgSpan.innerHTML = "";
+					passwordInput.style.backgroundColor = "white";
+					confirmPasswordErrorMsgSpan.innerHTML = "비밀번호가 일치하지 않습니다."
+					confirmPasswordErrorMsgSpan.style.color = "red";
+					confirmPasswordInput.style.backgroundColor = "#FFCECE";
+					document.querySelector("#success").innerHTML = "";
+				}else if(text == '3'){
+					passwordErrorMsgSpan.innerHTML = "필수항목입니다.";
+					passwordErrorMsgSpan.style.color = "red";
+					passwordInput.style.backgroundColor = "#FFCECE";
+					document.querySelector("#success").innerHTML = "";
+					confirmPasswordErrorMsgSpan.innerHTML = ""
+					confirmPasswordInput.style.backgroundColor = "white";
+				}else if(text == '4'){
+					passwordErrorMsgSpan.innerHTML = "기존 비밀번호와 동일합니다.";
+					passwordErrorMsgSpan.style.color = "red";
+					passwordInput.style.backgroundColor = "#FFCECE";
+					document.querySelector("#success").innerHTML = "";
+					confirmPasswordErrorMsgSpan.innerHTML = ""
+					confirmPasswordInput.style.backgroundColor = "white";
+				}else{
+					alert("server-side-error has been occured!");
+					document.location.href="${pageContext.request.contextPath}/game/main";
+				}
+			});
+		}
+	}
+
 }
 
 function isNickname(asValue) {
@@ -184,7 +199,6 @@ function isNickname(asValue) {
 	//한글 영어 숫자
 	return regExp.test(asValue);
 }
-
 </script>
 
 </body>

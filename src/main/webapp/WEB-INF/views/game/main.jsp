@@ -14,6 +14,9 @@
 <sec:authorize access="isAuthenticated()">
 <a href="${pageContext.request.contextPath}/member/update/profile">프로필보기</a><br>
 <a href="${pageContext.request.contextPath}/member/logout">로그아웃</a>
+<sec:authorize access="hasRole('ROLE_ADMIN')">
+<br><a href="${pageContext.request.contextPath}/admin/home">관리자페이지로</a>
+</sec:authorize>
 </sec:authorize>
 <sec:authorize access="!isAuthenticated()">
 <a href="${pageContext.request.contextPath}/member/loginForm">로그인하기</a><br>

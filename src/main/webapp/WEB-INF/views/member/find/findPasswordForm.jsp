@@ -19,7 +19,7 @@
 비밀번호가 생각나지 않으신가요?<br>
 고객님의 성함과 이메일을 입력해주시면<br>
 해당 이메일로 임시비밀번호를 보내드립니다.<br><br>
-<form:form action="findEmail" commandName="findEmail" method="post">
+<form:form action="findPassword" commandName="findEmail" method="post">
 	<form:input id="email" path="email" placeholder="EMAIL 입력"/><br>
 	<form:errors class="error" path="email"></form:errors><br>
 	<form:input id="name" path="name" placeholder="이름 입력"/><br>

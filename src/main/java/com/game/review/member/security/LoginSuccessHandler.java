@@ -55,7 +55,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler{
 		//권한리스트 추출
 		Collection<GrantedAuthority> authList = (Collection<GrantedAuthority>) authentication.getAuthorities();
 		Iterator<GrantedAuthority> authIter = authList.iterator();
-		String url=request.getContextPath() + "/member/loginSuccess";//일반사용자
+		String url=request.getContextPath() + "/game/main";//일반사용자
 		while(authIter.hasNext()) {
 			GrantedAuthority authority = authIter.next();
 			if(authority.getAuthority().equals("ROLE_ADMIN")) {

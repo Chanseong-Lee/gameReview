@@ -29,7 +29,7 @@
 	<select id="countByEmailAndName" parameterType="hashmap" resultType="Integer">
 		select nvl(count(*), 0 ) 
 		from "MEMBER"
-		where "M_EMAIL"=#{mEmail} and "M_NAME"=#{mName}
+		where "M_EMAIL"=#{email} and "M_NAME"=#{name}
 	</select>
 	
 	<!-- ajax용 -->
@@ -80,6 +80,12 @@
 	</update>
 	
 	<update id="updateTempPassword" parameterType="memberDTO">
+		update "MEMBER"
+		set "M_PASSWORD"=#{mPassword}
+		where "M_EMAIL"=#{mEmail}
+	</update>
+	
+	<update id="updatePassword" parameterType="memberDTO">
 		update "MEMBER"
 		set "M_PASSWORD"=#{mPassword}
 		where "M_EMAIL"=#{mEmail}
