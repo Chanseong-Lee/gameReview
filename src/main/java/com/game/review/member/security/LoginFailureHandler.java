@@ -36,7 +36,7 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
 		} else if (exception instanceof LockedException) {
 			request.setAttribute("loginFailMsg", "잠긴 계정입니다.");
 		} else if (exception instanceof DisabledException) {
-			request.setAttribute("loginFailMsg", "비활성화 된 계정입니다..");
+			request.setAttribute("loginFailMsg", "이메일인증을 하지않아 로그인이 불가능합니다.");
 		} else if (exception instanceof AccountExpiredException) {
 			request.setAttribute("loginFailMsg", "만료된 계정입니다..");
 		} else if (exception instanceof CredentialsExpiredException) {

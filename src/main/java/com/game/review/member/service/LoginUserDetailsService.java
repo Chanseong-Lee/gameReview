@@ -48,6 +48,17 @@ public class LoginUserDetailsService implements UserDetailsService {
 			loginUserDetails.setNickname(member.getmNickname());
 			loginUserDetails.setName(member.getmName());
 			loginUserDetails.setPoint(member.getmPoint());
+			loginUserDetails.setRegdate(member.getmRegdate());
+			return loginUserDetails;
+		} else if(admin == null && member != null && member.getAuthLevel().equals("ROLE_GUEST")) {
+			loginUserDetails = new LoginUserDetails(member.getmEmail(), member.getmPassword(), false,
+					AuthorityUtils.createAuthorityList(member.getAuthLevel())
+					);
+			loginUserDetails.setNum(member.getmNum());
+			loginUserDetails.setNickname(member.getmNickname());
+			loginUserDetails.setName(member.getmName());
+			loginUserDetails.setPoint(member.getmPoint());
+			loginUserDetails.setRegdate(member.getmRegdate());
 			return loginUserDetails;
 		} else if (member == null && admin != null && admin.getAuthLevel().equals("ROLE_ADMIN")) {
 			// 관리자일때
@@ -58,6 +69,7 @@ public class LoginUserDetailsService implements UserDetailsService {
 			loginUserDetails.setNickname(admin.getAdNickname());
 			loginUserDetails.setName("관리자");
 			loginUserDetails.setPoint(admin.getAdPoint());
+			loginUserDetails.setRegdate(admin.getAdRegdate());
 			return loginUserDetails;
 		} else {
 			// 어디에도 없을때는 예외

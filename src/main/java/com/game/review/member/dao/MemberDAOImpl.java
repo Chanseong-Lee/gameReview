@@ -52,9 +52,8 @@ public class MemberDAOImpl implements MemberDAO {
 	}
 
 	@Override
-	public int update(MemberDTO memberDTO) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int updateProfile(MemberDTO memberDTO) {
+		return sqlSessionTemplate.update("updateProfile", memberDTO);
 	}
 
 	@Override

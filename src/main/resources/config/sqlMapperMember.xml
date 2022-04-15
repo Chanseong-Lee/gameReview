@@ -73,9 +73,9 @@
 		where "M_EMAIL"=#{email}
 	</update>
 
-	<update id ="updateMember" parameterType="memberDTO">
+	<update id ="updateProfile" parameterType="memberDTO">
 		update "MEMBER" 
-		set "M_NICKNAME"=#{mNickname}, "M_NAME"=#{mName} 
+		set "M_NICKNAME"=#{mNickname} 
 		where "M_NUM"=#{mNum}
 	</update>
 	

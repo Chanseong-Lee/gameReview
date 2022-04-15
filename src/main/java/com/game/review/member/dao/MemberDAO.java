@@ -32,10 +32,13 @@ public interface MemberDAO {
 	public int insert(MemberDTO memberDTO);
 	
 	//수정(마이페이지에서)
-	public int update(MemberDTO memberDTO);
+	public int updateProfile(MemberDTO memberDTO);
 	
 	//임시비밀번호발급
 	public int updateTempPassword(MemberDTO memberDTO);
+	
+	//인증키
+	public int updateValidKey(Map<String, String> dataValues);
 	
 	//삭제(탈퇴)
 	public int delete(Long mNum);
@@ -43,8 +46,6 @@ public interface MemberDAO {
 	//인증키비교
 	public int countByValidKey(String validKey);
 	
-	//인증키
-	public int updateValidKey(Map<String, String> dataValues);
 	
 	
 	

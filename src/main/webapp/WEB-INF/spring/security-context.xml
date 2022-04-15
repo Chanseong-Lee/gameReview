@@ -19,7 +19,7 @@
 		<security:intercept-url pattern="/member/loginForm" access="permitAll" />
 		<security:intercept-url pattern="/member/logoutSuccess" access="permitAll" />
 		<security:intercept-url pattern="/member/logout" access="hasAnyRole('ROLE_USER, ROLE_ADMIN')" />
-		<security:intercept-url pattern="/member/update" access="hasAnyRole('ROLE_USER, ROLE_ADMIN')" />
+		<security:intercept-url pattern="/member/update/**" access="hasAnyRole('ROLE_USER, ROLE_ADMIN')" />
 		<security:intercept-url pattern="/member/delete" access="hasAnyRole('ROLE_USER, ROLE_ADMIN')" />
 		
 		<security:intercept-url pattern="/member/**" access="permitAll" />
@@ -66,7 +66,7 @@
 	<!-- delete-cookies : 로그아웃 성공시, 삭제할 쿠키 이름 지정 -->
 	<!-- success-handler-ref : 로그아웃 성공시, logout-success-url 이 아닌 핸들러로 리다이렉트 -->
 
-	<security:authentication-manager>
+	<security:authentication-manager erase-credentials="false" >
 		<security:authentication-provider user-service-ref="loginUserDetailsService">
 			<security:password-encoder ref="encoder"/>
 		</security:authentication-provider>
@@ -80,7 +80,6 @@
 	
 	<!-- login 성공시 작동 admin이면 관리자 페이지, 일반유저면 로그인성공페이지로 Redirect -->
 	<bean id="loginSuccessHandler" class="com.game.review.member.security.LoginSuccessHandler"/>
-	
 	<context:annotation-config/>
 	<context:component-scan base-package="com.game.review"/>
 </beans>

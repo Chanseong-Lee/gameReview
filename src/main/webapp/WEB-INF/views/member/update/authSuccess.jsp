@@ -7,13 +7,12 @@
 <title>Insert title here</title>
 </head>
 <body>
-<ol>
-	<li>${lud }</li>
-	<li>${lud.name }</li>
-	<li>${lud.nickname }</li>
-	<li>${lud.num }</li>
-	<li>${lud.point }</li>
-</ol>
-
+<body>
+<script type="text/javascript">
+window.onload = function() {
+	opener.location.href="${pageContext.request.contextPath}/member/update/updateForm";
+	self.close();
+}
+</script>
 </body>
 </html>

@@ -1,5 +1,6 @@
 package com.game.review.member.command;
 
+import java.sql.Timestamp;
 import java.util.Collection;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -12,14 +13,19 @@ import org.springframework.security.core.userdetails.User;
 //User Object타입 => UserDetails타입 객체
 //Security Session => Authentication => UserDetails
 public class LoginUserDetails extends User {
-	
+
 	private Long num;
 	private String nickname;
 	private String name;
 	private Long point;
+	private Timestamp regdate;	
 	
 	public LoginUserDetails(String username, String password, Collection<? extends GrantedAuthority> authorities) {
 		super(username, password, authorities);
+	}
+	
+	public LoginUserDetails(String username, String password, boolean enabled, Collection<? extends GrantedAuthority> authorities) {
+		super(username, password, enabled, true, true, true, authorities);
 	}
 	
 	@Override
@@ -31,6 +37,7 @@ public class LoginUserDetails extends User {
 	public String getPassword() {
 		return super.getPassword();
 	}
+	
 	
 	public Long getNum() {
 		return num;
@@ -69,6 +76,14 @@ public class LoginUserDetails extends User {
 
 	public void setPoint(Long point) {
 		this.point = point;
+	}
+
+	public Timestamp getRegdate() {
+		return regdate;
+	}
+
+	public void setRegdate(Timestamp regdate) {
+		this.regdate = regdate;
 	}
 
 
