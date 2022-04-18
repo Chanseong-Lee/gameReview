@@ -24,14 +24,14 @@ td {
 		<table>
 			<tr>
 				<td>이메일</td>
-				<td><form:input id="email" path="email" oninput="checkEmail()" />&nbsp;
+				<td><form:input id="email" path="email" oninput="checkEmail()" autocomplete='off'/>&nbsp;
 					<span class="errorAfterSubmit"><form:errors path="email" /></span>
 					<span id="emailError"></span>
 				</td>
 			</tr>
 			<tr>
 				<td>이름</td>
-				<td><form:input id="name" path="name" oninput="checkName()"/><br>
+				<td><form:input id="name" path="name" oninput="checkName()" autocomplete='off'/><br>
 				 	<span class="errorAfterSubmit"><form:errors path="name" /></span>
 				 	<span id="nameError"></span>
 				 </td>
@@ -39,19 +39,19 @@ td {
 			<tr>
 				<td>닉네임</td>
 				<td>
-					<form:input id="nickname" path="nickname" oninput="checkNickname()"/><br> 
+					<form:input id="nickname" path="nickname" oninput="checkNickname()" autocomplete='off'/><br> 
 					<span class="errorAfterSubmit"><form:errors path="nickname" /></span>
 					<span id="nicknameError"></span>
 				</td>
 			</tr>
 			<tr>
 				<td>비밀번호</td>
-				<td><form:password id="password" path="password" oninput="checkPw()"/><br> 
+				<td><form:password id="password" path="password" oninput="checkPw()" autocomplete='off'/><br> 
 				<span class="errorAfterSubmit"><form:errors path="password" /></span></td>
 			</tr>
 			<tr>
 				<td>비밀번호 확인</td>
-				<td><form:password id="confirmPassword" path="confirmPassword" oninput="checkPw()"/><br> 
+				<td><form:password id="confirmPassword" path="confirmPassword" oninput="checkPw()" autocomplete='off'/><br> 
 					<span class="errorAfterSubmit"><form:errors path="confirmPassword" /></span>
 					<span id="noMatchErr"></span>
 				</td>

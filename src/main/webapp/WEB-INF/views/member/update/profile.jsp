@@ -4,6 +4,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -33,8 +34,6 @@ td{
 <body>
 <h1>회원 프로필</h1>
 <sec:authentication property='principal.profileImgname' var="profileImg" />
-<c:set var="stringImg" value="unknown_profile.jpg" />
-
 <table>
 	<tr>
 		<td colspan="2">
@@ -63,7 +62,7 @@ td{
 	</tr>
 	<tr>
 		<td>가입일</td>
-		<td><sec:authentication property="principal.regdate"/></td>
+		<td><sec:authentication property="principal.regdate" var="regdate"/><fmt:formatDate value="${regdate }" pattern="yyyy-MM-dd"/></td>
 	</tr>
 	<tr>
 		<td>보유포인트</td>

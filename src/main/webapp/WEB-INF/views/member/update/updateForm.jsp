@@ -55,7 +55,10 @@ td{
 <article></article>
 
 <script type="text/javascript">
-window.onload = fetchPage('ajaxMemberUpdateForm');
+window.onload = function(){
+	fetchPage('ajaxMemberUpdateForm');
+}
+
 //ajax로 페이지 로딩
 function fetchPage(name) {
 	fetch(name).then(function (response) {
@@ -231,6 +234,7 @@ function setTumbnail(){
 		reader.readAsDataURL(fileInfo);
 	}
 }
+
 
 function isNickname(asValue) {
 	var regExp = /^[a-zA-Z0-9ㄱ-힣][a-zA-Z0-9ㄱ-힣]*$/;

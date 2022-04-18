@@ -49,6 +49,6 @@
 <div id="success"></div>
 <%--<input type="submit" id="submit" value="변경사항 저장"> --%>
 <button type="button" id="update_btn" onclick="updateBtn()">변경사항 저장</button>
-<button type="reset">되돌리기</button>
+<button type="reset" onclick="resetThumbnail()">되돌리기</button>
 <button type="button" onclick="location.href='${pageContext.request.contextPath}/member/update/profile'">프로필 화면으로</button>
 </form:form>

@@ -91,7 +91,6 @@ public class MemberUpdateService {
 					//세션값 수정
 					loginUserDetails.setProfileImgname(savedFilename);
 				}
-				
 			} else { //파일이 null일때
 				
 				//뷰에서 기본프로필로 돌아가기 선택했을경우
@@ -102,8 +101,6 @@ public class MemberUpdateService {
 					profileImgDTO.setmNum(loginUserDetails.getNum());
 					int resForBasicImg = memberDAO.updateProfileImg(profileImgDTO);
 					logger.info("기본 프로필 사진 업데이트 성공? : " + resForBasicImg);
-					
-					
 					
 					//DB업데이트 후 업데이트 전 사진 삭제
 					if(!loginUserDetails.getProfileImgname().equals(unknownProfile)) {//기존 파일이 기본사진이 아니면 삭제
@@ -138,12 +135,9 @@ public class MemberUpdateService {
 				logger.info("기존 닉네임과 같으므로 db접근 안함");
 			}
 			
-			
 		}catch(IOException e ) {
 			logger.error("IO예외발생!");
 		}
-		
-		
 	}
 	
 	public String updatePwd(String newPassword, String confirmPassword, String email, String oldPassword) throws NoValueException, PasswordNotMatchingException, NoNewPasswordException {
@@ -159,7 +153,6 @@ public class MemberUpdateService {
 		if(!newPassword.equals(confirmPassword)) {
 			throw new PasswordNotMatchingException();
 		}
-		
 		
 		String encodedPwd = encoder.encode(newPassword);
 		MemberDTO memberDTO = new MemberDTO();
