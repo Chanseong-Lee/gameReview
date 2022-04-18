@@ -38,6 +38,7 @@
 		from "MEMBER"
 		where "M_EMAIL" = #{mEmail}
 	</select>
+	
 	<!-- ajax용 -->
 	<select id="countByNickname" parameterType="String" resultType="Integer">
 		select nvl(count(*), 0)
@@ -60,6 +61,12 @@
 		</selectKey>
 	</insert>
 	
+	<!-- 회원가입시 디폴트 프로필사진 세팅 -->
+	<insert id="insertDefaultProfileImg" parameterType="String">
+		insert into "PROFILE_IMG"("PROFILE_NUM", "M_NUM") 
+		values("PROFILE_IMG_SEQ".nextval, (select "M_NUM" from "MEMBER" where "M_EMAIL" = #{mEmail}));
+	</insert>
+	
 	<!-- 이메일 인증키 비교해서 count가 1이상이면 인증 성공하도록 -->
 	<select id="countByValidKey" parameterType="String" resultType="Integer">
 		select count(*) from "MEMBER"
@@ -78,6 +85,18 @@
 		set "M_NICKNAME"=#{mNickname} 
 		where "M_NUM"=#{mNum}
 	</update>
+	
+	<update id="updateProfileImg" parameterType="profileImgDTO">
+		update "PROFILE_IMG"
+		set "PROFILE_IMGNAME"=#{profileImgname}
+		where "M_NUM"=#{mNum}
+	</update>
+	
+	<select id="selectProfileImg" parameterType="Long" resultType="profileImgDTO">
+		select * 
+		from "PROFILE_IMG" 
+		where "M_NUM"=#{mNum}
+	</select>
 	
 	<update id="updateTempPassword" parameterType="memberDTO">
 		update "MEMBER"

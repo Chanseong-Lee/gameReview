@@ -18,7 +18,8 @@ public class LoginUserDetails extends User {
 	private String nickname;
 	private String name;
 	private Long point;
-	private Timestamp regdate;	
+	private Timestamp regdate;
+	private String profileImgname;
 	
 	public LoginUserDetails(String username, String password, Collection<? extends GrantedAuthority> authorities) {
 		super(username, password, authorities);
@@ -84,6 +85,14 @@ public class LoginUserDetails extends User {
 
 	public void setRegdate(Timestamp regdate) {
 		this.regdate = regdate;
+	}
+
+	public String getProfileImgname() {
+		return profileImgname;
+	}
+
+	public void setProfileImgname(String profileImgname) {
+		this.profileImgname = profileImgname;
 	}
 
 

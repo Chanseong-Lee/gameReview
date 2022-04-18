@@ -28,6 +28,23 @@ td{
     overflow: hidden;
     margin: auto;
 }
+#uploadBtn{
+ 	padding: 3px 20px;
+  	background-color:#FF6600;
+  	border-radius: 4px;
+  	color: white;
+  	cursor: pointer;
+}
+
+#backToBasicProfileImgBtn{
+  	padding: 3px 10px;
+  	background-color:#FF6600;
+  	border-radius: 4px;
+  	color: white;
+  	cursor: pointer;
+	
+}
+
 </style>
 </head>
 <body>
@@ -39,7 +56,7 @@ td{
 
 <script type="text/javascript">
 window.onload = fetchPage('ajaxMemberUpdateForm');
-
+//ajax로 페이지 로딩
 function fetchPage(name) {
 	fetch(name).then(function (response) {
 		response.text().then(function (text) {
@@ -49,16 +66,22 @@ function fetchPage(name) {
 }
 
 let nicknameChecker = 0;
-
+let backTobasicImg = false;
+//회원정보 수정
 let updateBtn = function () {
 	let nicknameMsgSpan = document.querySelector("#nicknameError");
 	let nicknameInput = document.querySelector("#nickname");
 	let nicknameValue = nicknameInput.value;
+	let profileImg = document.querySelector("#profileImg")
 	console.log("닉네임 : " + nicknameValue);
-	const dataMember = {
-		nickname: nicknameValue,
-	};
-
+	console.log("파일 : " + profileImg.files[0]);
+	console.log("기본프로필설정? : " + backTobasicImg);
+	let formData = new FormData();
+	formData.append("nickname", nicknameValue);
+	formData.append("backTobasicImg", backTobasicImg);
+	if(profileImg.files[0]!=null){
+		formData.append("profileImg", profileImg.files[0]);
+	}
 	if (!nicknameValue.trim()) {
 		nicknameMsgSpan.innerHTML = "필수항목입니다.";
 		nicknameMsgSpan.style.color = "red";
@@ -81,11 +104,9 @@ let updateBtn = function () {
 		document.querySelector("#success").innerHTML = "";
 	} else {
 		fetch('ajaxMemberUpdate', {
+			//form-data일경우 헤더를 지워준다.
 			method: "POST",
-			headers: {
-				"Content-Type": "application/json; charset=utf-8"
-			},
-			body: JSON.stringify(dataMember),
+			body: formData,
 		}).then(function (response) {
 			return response.text();
 		}).then(function (text) {
@@ -111,6 +132,12 @@ let updateBtn = function () {
 				nicknameMsgSpan.style.color = "red";
 				nicknameInput.style.backgroundColor = "#FFCECE";
 				document.querySelector("#success").innerHTML = "";
+			} else if (text == '4'){
+				nicknameMsgSpan.innerHTML = "";
+				//nicknameMsgSpan.style.color = "";
+				nicknameInput.style.backgroundColor = "white";
+				document.querySelector("#success").innerHTML = "이미지 파일만 업로드 가능합니다.";
+				document.querySelector("#success").style.color = "red";
 			}
 		})
 	}
@@ -191,13 +218,32 @@ let updatePwdBtn = function () {
 			});
 		}
 	}
+}
 
+function setTumbnail(){
+	let fileInfo = document.getElementById("profileImg").files[0];
+	let reader = new FileReader();
+		
+	reader.onload = function(){
+		document.getElementById("thumbnailImg").src = reader.result;
+	}
+	if(fileInfo){
+		reader.readAsDataURL(fileInfo);
+	}
 }
 
 function isNickname(asValue) {
 	var regExp = /^[a-zA-Z0-9ㄱ-힣][a-zA-Z0-9ㄱ-힣]*$/;
 	//한글 영어 숫자
 	return regExp.test(asValue);
+}
+
+function basicImg(){
+	backTobasicImg = confirm("기본 프로필 사진으로 돌아가시겠습니까?");
+	if(backTobasicImg){
+		document.getElementById("thumbnailImg").src = "${pageContext.request.contextPath}/resources/images/unknown_profile/unknown_profile.jpg";
+		document.querySelector("#profileImg").value = null;
+	}
 }
 </script>
 

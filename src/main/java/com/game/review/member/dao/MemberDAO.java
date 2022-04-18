@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.game.review.member.dto.MemberDTO;
+import com.game.review.member.dto.ProfileImgDTO;
 
 public interface MemberDAO {
 	//전체멤버
@@ -33,6 +34,14 @@ public interface MemberDAO {
 	
 	//수정(마이페이지에서)
 	public int updateProfile(MemberDTO memberDTO);
+	
+	//디폴트 프로필 이미지 삽입
+	public int insertDefaultProfileImg(String mEmail);
+	
+	//프로필사진 수정
+	public int updateProfileImg(ProfileImgDTO profileImgDTO);
+	
+	public Object selectProfileImg(Long mNum);
 	
 	//임시비밀번호발급
 	public int updateTempPassword(MemberDTO memberDTO);

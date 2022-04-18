@@ -23,6 +23,7 @@ import com.game.review.member.command.LoginUserDetails;
 import com.game.review.member.command.MemberUpdateCommand;
 import com.game.review.member.command.PasswordCommand;
 import com.game.review.member.exception.AlreadyExistNicknameException;
+import com.game.review.member.exception.NoImageException;
 import com.game.review.member.exception.NoNewPasswordException;
 import com.game.review.member.exception.NoSessionDbMatchException;
 import com.game.review.member.exception.NoValueException;
@@ -72,8 +73,12 @@ public class MemberUpdateController {
 	//ajax로 회원 수정 처리
 	@RequestMapping(value="member/update/ajaxMemberUpdate", method=RequestMethod.POST)
 	@ResponseBody
-	public String ajaxMemberUpdate(@RequestBody MemberUpdateCommand memberUpdateCommand, @AuthenticationPrincipal LoginUserDetails loginUserDetails) throws Exception {
-		logger.info("컨트롤러 커맨드객체 값 : "+memberUpdateCommand.getNickname());
+	public String ajaxMemberUpdate(
+			MemberUpdateCommand memberUpdateCommand, //formdata로 보낼경우 @RequestBody지워야함
+			@AuthenticationPrincipal 
+			LoginUserDetails loginUserDetails) throws Exception {
+		
+		logger.info("컨트롤러 커맨드객체 값 : "+memberUpdateCommand);
 		logger.info("세션값 : " + loginUserDetails);
 		try {
 			if(memberUpdateCommand.getNickname() == null || memberUpdateCommand.getNickname().trim().isEmpty()) {
@@ -81,13 +86,17 @@ public class MemberUpdateController {
 				logger.debug("닉네임 빈값=2");
 				return "2";
 			}
-			memberUpdateService.updateProfile(memberUpdateCommand, loginUserDetails.getNum());
+			memberUpdateService.updateProfile(memberUpdateCommand, loginUserDetails);
 			loginUserDetails.setNickname(memberUpdateCommand.getNickname());
+			//세션 이미지명도 변경
 			logger.debug("정상!=1");
 			return "0";//정상
 		}catch(AlreadyExistNicknameException e) {
 			logger.error("닉네임 중복!");
 			return "1";
+		}catch(NoImageException e) {
+			logger.error("이미지파일이 아님!");
+			return "4";
 		}catch(NoSessionDbMatchException e) {
 			logger.error("세션이상!");
 			return "3";
@@ -137,7 +146,7 @@ public class MemberUpdateController {
 	
 	
 	
-	
+	/*
 	//회원 수정 처리
 	@RequestMapping(value="member/update/update", method=RequestMethod.POST)
 	public String memberUpdate(@ModelAttribute("updateCommand") MemberUpdateCommand memberUpdateCommand, BindingResult errors, Model model, @AuthenticationPrincipal LoginUserDetails loginUserDetails) {
@@ -148,7 +157,7 @@ public class MemberUpdateController {
 		logger.info("컨트롤러 커맨드객체 값 : "+memberUpdateCommand.getNickname());
 		logger.info("세션값 : " + loginUserDetails);
 		try {
-			memberUpdateService.updateProfile(memberUpdateCommand, loginUserDetails.getNum());
+			memberUpdateService.updateProfile(memberUpdateCommand, loginUserDetails);
 			loginUserDetails.setNickname(memberUpdateCommand.getNickname());
 		} catch(AlreadyExistNicknameException e) {
 			logger.error("닉네임 중복!");
@@ -159,7 +168,7 @@ public class MemberUpdateController {
 		}
 		return "redirect:/member/update/profile";
 	}
-	
+	*/
 	//수정전 비밀번호 입력하는 폼
 	@RequestMapping(value="member/update/authForm")
 	public String authForm(@ModelAttribute("passwordCommand") PasswordCommand passwordCommand) {

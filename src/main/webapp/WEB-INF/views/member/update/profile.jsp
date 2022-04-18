@@ -32,11 +32,20 @@ td{
 </head>
 <body>
 <h1>회원 프로필</h1>
+<sec:authentication property='principal.profileImgname' var="profileImg" />
+<c:set var="stringImg" value="unknown_profile.jpg" />
+
 <table>
 	<tr>
 		<td colspan="2">
 			<div id="prifileImgBox">
-				이미지 추가할 예정
+			
+			<c:if test="${profileImg == 'unknown_profile.jpg'}">
+				<img src="<c:url value='/resources/images/unknown_profile/${profileImg}' />" id="thumbnailImg" width="152">
+			</c:if>
+			<c:if test="${profileImg != 'unknown_profile.jpg'}">
+				<img src="<c:url value='/images/profile/${profileImg}' />" id="thumbnailImg" width="152">
+			</c:if>
 			</div>
 		</td>
 	</tr>

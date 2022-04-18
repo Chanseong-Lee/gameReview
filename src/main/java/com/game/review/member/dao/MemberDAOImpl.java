@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.game.review.member.dto.MemberDTO;
+import com.game.review.member.dto.ProfileImgDTO;
 
 @Repository
 public class MemberDAOImpl implements MemberDAO {
@@ -55,6 +56,21 @@ public class MemberDAOImpl implements MemberDAO {
 	public int updateProfile(MemberDTO memberDTO) {
 		return sqlSessionTemplate.update("updateProfile", memberDTO);
 	}
+	
+	@Override
+	public int insertDefaultProfileImg(String mEmail) {
+		return sqlSessionTemplate.insert("insertDefaultProfileImg", mEmail);
+	}
+	
+	@Override
+	public int updateProfileImg(ProfileImgDTO profileImgDTO) {
+		return sqlSessionTemplate.update("updateProfileImg", profileImgDTO);
+	}
+	
+	@Override
+	public ProfileImgDTO selectProfileImg(Long mNum) {
+		return sqlSessionTemplate.selectOne("selectProfileImg", mNum);
+	}
 
 	@Override
 	public int delete(Long mNum) {
@@ -91,5 +107,6 @@ public class MemberDAOImpl implements MemberDAO {
 	public int updatePassword(MemberDTO memberDTO) {
 		return sqlSessionTemplate.update("updatePassword", memberDTO);
 	}
+	
 
 }

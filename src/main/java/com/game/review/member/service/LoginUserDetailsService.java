@@ -15,6 +15,7 @@ import com.game.review.member.dao.AdminDAO;
 import com.game.review.member.dao.MemberDAO;
 import com.game.review.member.dto.AdminDTO;
 import com.game.review.member.dto.MemberDTO;
+import com.game.review.member.dto.ProfileImgDTO;
 
 // 시큐리티 설정에서  login-page="/member/login"
 // /member/login요청이 오면 자동으로 UserDetailsService타입으로 IoC되어있는  loadUserByUsername()가 호출됨
@@ -41,6 +42,7 @@ public class LoginUserDetailsService implements UserDetailsService {
 
 		if (admin == null && member != null && member.getAuthLevel().equals("ROLE_USER")) {
 			// 일반회원
+			ProfileImgDTO img = (ProfileImgDTO) memberDAO.selectProfileImg(member.getmNum());
 			loginUserDetails = new LoginUserDetails(member.getmEmail(), member.getmPassword(),
 					AuthorityUtils.createAuthorityList(member.getAuthLevel())
 					);
@@ -49,6 +51,7 @@ public class LoginUserDetailsService implements UserDetailsService {
 			loginUserDetails.setName(member.getmName());
 			loginUserDetails.setPoint(member.getmPoint());
 			loginUserDetails.setRegdate(member.getmRegdate());
+			loginUserDetails.setProfileImgname(img.getProfileImgname());
 			return loginUserDetails;
 		} else if(admin == null && member != null && member.getAuthLevel().equals("ROLE_GUEST")) {
 			loginUserDetails = new LoginUserDetails(member.getmEmail(), member.getmPassword(), false,

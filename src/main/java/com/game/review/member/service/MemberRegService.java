@@ -18,6 +18,7 @@ import com.game.review.HomeController;
 import com.game.review.member.command.MemberRegCommand;
 import com.game.review.member.dao.MemberDAO;
 import com.game.review.member.dto.MemberDTO;
+import com.game.review.member.dto.ProfileImgDTO;
 import com.game.review.member.email.MailUtils;
 import com.game.review.member.email.TempKey;
 import com.game.review.member.exception.AlreadyExistEmailException;
@@ -61,6 +62,9 @@ public class MemberRegService {
 		memberDTO.setmName(mc.getName());
 		memberDTO.setmIsvalid(validKey);
 		memberDAO.insert(memberDTO);
+		
+		//default profile img setting
+		memberDAO.insertDefaultProfileImg(mc.getEmail());
 		
 		//send mail for verification
 		MailUtils sendMail = new MailUtils(mailSender);
