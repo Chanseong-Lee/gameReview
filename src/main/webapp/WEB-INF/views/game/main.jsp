@@ -22,5 +22,7 @@
 <a href="${pageContext.request.contextPath}/member/loginForm">로그인하기</a><br>
 <a href="${pageContext.request.contextPath}/member/regist">회원가입하기</a>
 </sec:authorize>
+<br>
+여기서부터 게임 리스트 출력
 </body>
 </html>
