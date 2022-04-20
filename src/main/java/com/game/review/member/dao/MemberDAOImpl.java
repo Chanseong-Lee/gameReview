@@ -42,9 +42,8 @@ public class MemberDAOImpl implements MemberDAO {
 	}
 	
 	@Override
-	public int count() {
-		// TODO Auto-generated method stub
-		return 0;
+	public int countAll() {
+		return sqlSessionTemplate.selectOne("countAll");
 	}
 
 	@Override
@@ -107,6 +106,32 @@ public class MemberDAOImpl implements MemberDAO {
 	public int updatePassword(MemberDTO memberDTO) {
 		return sqlSessionTemplate.update("updatePassword", memberDTO);
 	}
+
+	@Override
+	public List<MemberDTO> searchByEmail(String email) {
+		return sqlSessionTemplate.selectList("searchByEmail", email);
+	}
+
+	@Override
+	public List<MemberDTO> searchByNickname(String nickname) {
+		return sqlSessionTemplate.selectList("searchByNickname", nickname);
+
+	}
+
+	@Override
+	public List<MemberDTO> searchByName(String name) {
+		return sqlSessionTemplate.selectList("searchByName", name);
+
+	}
+
+	@Override
+	public Object selectByNickname(String mNickname) {
+		return sqlSessionTemplate.selectOne("selectByNickname", mNickname);
+	}
 	
+	@Override
+	public int updateProfileByAdmin(MemberDTO memberDTO) {
+		return sqlSessionTemplate.update("updateProfileByAdmin", memberDTO); 
+	}
 
 }

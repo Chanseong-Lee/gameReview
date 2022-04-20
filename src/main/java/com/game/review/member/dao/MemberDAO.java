@@ -20,6 +20,8 @@ public interface MemberDAO {
 	//비밀번호찾기
 	public Object selectByEmailAndName(Map<String, String> map);
 	
+	public Object selectByNickname(String mNickname);
+	
 	//ajax 이메일 중복체크용
 	public int countByEmail(String mEmail);
 	
@@ -27,19 +29,23 @@ public interface MemberDAO {
 	public int countByNickname(String mNickname);
 	
 	//전체 회원수
-	public int count();
+	public int countAll();
 
 	//등록
 	public int insert(MemberDTO memberDTO);
 	
 	//수정(마이페이지에서)
 	public int updateProfile(MemberDTO memberDTO);
+
+	//관리자에의해 프로필 수정
+	public int updateProfileByAdmin(MemberDTO memberDTO);
 	
-	//디폴트 프로필 이미지 삽입
+	//회원가입 시 디폴트 프로필 이미지 삽입
 	public int insertDefaultProfileImg(String mEmail);
 	
 	//프로필사진 수정
 	public int updateProfileImg(ProfileImgDTO profileImgDTO);
+	
 	
 	public Object selectProfileImg(Long mNum);
 	
@@ -58,6 +64,10 @@ public interface MemberDAO {
 	//인증키비교
 	public int countByValidKey(String validKey);
 	
+	//멤버관리 검색
+	public List<MemberDTO> searchByEmail(String email);
+	public List<MemberDTO> searchByNickname(String nickname);
+	public List<MemberDTO> searchByName(String name);
 	
 	
 	

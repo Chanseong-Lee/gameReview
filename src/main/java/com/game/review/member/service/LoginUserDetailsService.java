@@ -10,10 +10,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.game.review.HomeController;
+import com.game.review.admin.dao.AdminDAO;
+import com.game.review.admin.dto.AdminDTO;
 import com.game.review.member.command.LoginUserDetails;
-import com.game.review.member.dao.AdminDAO;
 import com.game.review.member.dao.MemberDAO;
-import com.game.review.member.dto.AdminDTO;
 import com.game.review.member.dto.MemberDTO;
 import com.game.review.member.dto.ProfileImgDTO;
 
@@ -22,7 +22,7 @@ import com.game.review.member.dto.ProfileImgDTO;
 @Service
 public class LoginUserDetailsService implements UserDetailsService {
 	
-	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+	private static final Logger logger = LoggerFactory.getLogger(LoginUserDetailsService.class);
 	@Autowired
 	private MemberDAO memberDAO;
 
@@ -53,7 +53,7 @@ public class LoginUserDetailsService implements UserDetailsService {
 			loginUserDetails.setRegdate(member.getmRegdate());
 			loginUserDetails.setProfileImgname(img.getProfileImgname());
 			return loginUserDetails;
-		} else if(admin == null && member != null && member.getAuthLevel().equals("ROLE_GUEST")) {
+		} else if(admin == null && member != null && member.getAuthLevel().equals("ROLE_GUEST")) {	//이메일 인증 안한사람은 권한 게스트. 로그인 불가..
 			loginUserDetails = new LoginUserDetails(member.getmEmail(), member.getmPassword(), false,
 					AuthorityUtils.createAuthorityList(member.getAuthLevel())
 					);
@@ -62,6 +62,7 @@ public class LoginUserDetailsService implements UserDetailsService {
 			loginUserDetails.setName(member.getmName());
 			loginUserDetails.setPoint(member.getmPoint());
 			loginUserDetails.setRegdate(member.getmRegdate());
+	
 			return loginUserDetails;
 		} else if (member == null && admin != null && admin.getAuthLevel().equals("ROLE_ADMIN")) {
 			// 관리자일때
@@ -73,6 +74,7 @@ public class LoginUserDetailsService implements UserDetailsService {
 			loginUserDetails.setName("관리자");
 			loginUserDetails.setPoint(admin.getAdPoint());
 			loginUserDetails.setRegdate(admin.getAdRegdate());
+			loginUserDetails.setProfileImgname(admin.getAdProfile());
 			return loginUserDetails;
 		} else {
 			// 어디에도 없을때는 예외

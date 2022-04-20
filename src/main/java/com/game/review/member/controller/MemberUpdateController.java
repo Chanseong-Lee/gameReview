@@ -34,7 +34,7 @@ import com.game.review.member.validate.MemberUpdateCommandValidator;
 @Controller
 public class MemberUpdateController {
 	
-	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+	private static final Logger logger = LoggerFactory.getLogger(MemberUpdateController.class);
 	
 	@Autowired
 	private AuthenticationManager authenticationManager;

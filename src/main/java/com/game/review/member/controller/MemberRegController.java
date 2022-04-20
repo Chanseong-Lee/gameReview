@@ -20,13 +20,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.game.review.HomeController;
 import com.game.review.member.command.MemberRegCommand;
 import com.game.review.member.exception.AlreadyExistEmailException;
-import com.game.review.member.exception.noExistValidKeyException;
+import com.game.review.member.exception.NoExistValidKeyException;
 import com.game.review.member.service.MemberRegService;
 import com.game.review.member.validate.MemberRegCommandValidator;
 @Controller
 public class MemberRegController {
 	
-	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+	private static final Logger logger = LoggerFactory.getLogger(MemberRegController.class);
 	
 	@Autowired
 	private MemberRegService memberRegService;
@@ -91,7 +91,7 @@ public class MemberRegController {
 		memberRegService.emailAuth(email, validKey);
 		model.addAttribute("email", email);
 		model.addAttribute("validKey", validKey);
-		} catch(noExistValidKeyException e) {
+		} catch(NoExistValidKeyException e) {
 			logger.error("없는 인증키");
 		}
 		return "member/mailAuthSuccess";//alert로 메일인증 완료 및 로그인 하라는 메시지 알림

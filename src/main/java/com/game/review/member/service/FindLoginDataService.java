@@ -25,7 +25,7 @@ import com.game.review.member.exception.NoEmailExistException;
 @Service
 public class FindLoginDataService {
 	
-	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+	private static final Logger logger = LoggerFactory.getLogger(FindLoginDataService.class);
 	@Autowired
 	private JavaMailSender mailSender;
 	@Autowired

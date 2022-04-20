@@ -17,7 +17,7 @@ import com.game.review.member.service.NicknameDupCheckService;
 @Controller
 public class NicknameDupCheckController {
 	
-	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+	private static final Logger logger = LoggerFactory.getLogger(NicknameDupCheckController.class);
 	
 	@Autowired
 	private NicknameDupCheckService nicknameDupCheckService;

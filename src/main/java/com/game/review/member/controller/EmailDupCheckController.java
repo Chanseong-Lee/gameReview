@@ -17,7 +17,7 @@ import com.game.review.member.validate.EmailDupValidator;
 @Controller
 public class EmailDupCheckController {
 	
-	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+	private static final Logger logger = LoggerFactory.getLogger(EmailDupCheckController.class);
 	@Autowired
 	public EmailDupCheckService emailDupCheckService;
 	

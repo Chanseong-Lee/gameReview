@@ -16,7 +16,7 @@ import com.game.review.member.dto.MemberDTO;
 
 @Controller
 public class TestController {
-	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+	private static final Logger logger = LoggerFactory.getLogger(TestController.class);
 	@Autowired
 	private MemberDAO memberDAO;
 	

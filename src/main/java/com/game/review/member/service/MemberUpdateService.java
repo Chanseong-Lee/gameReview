@@ -3,17 +3,22 @@ package com.game.review.member.service;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.game.review.HomeController;
+import com.game.review.admin.dao.AdminDAO;
+import com.game.review.admin.dto.AdminDTO;
 import com.game.review.member.command.LoginUserDetails;
 import com.game.review.member.command.MemberUpdateCommand;
 import com.game.review.member.dao.MemberDAO;
@@ -29,16 +34,19 @@ import com.game.review.member.validate.FileTypeByTika;
 @Service
 public class MemberUpdateService {
 	
-	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+	private static final Logger logger = LoggerFactory.getLogger(MemberUpdateService.class);
 	
 	@Autowired
 	private MemberDAO memberDAO;
 	
 	@Autowired
+	private AdminDAO adminDAO;
+	
+	@Autowired
 	private BCryptPasswordEncoder encoder;
 	
 	@Transactional
-	public void updateProfile(MemberUpdateCommand memberUpdateCommand, LoginUserDetails loginUserDetails) throws NoSessionDbMatchException, AlreadyExistNicknameException {
+	public void updateProfile(MemberUpdateCommand memberUpdateCommand, LoginUserDetails loginUserDetails) throws NoImageException, NoSessionDbMatchException, AlreadyExistNicknameException {
 		
 		if(!memberUpdateCommand.getNickname().equals(loginUserDetails.getNickname())) {//기존이름과 같지않을때 db와 비교
 			int dup = memberDAO.countByNickname(memberUpdateCommand.getNickname());
@@ -53,6 +61,13 @@ public class MemberUpdateService {
 		File file = null;
 		File oldFile = null;
 		String unknownProfile = "unknown_profile.jpg";
+		Collection<GrantedAuthority> auth = loginUserDetails.getAuthorities();
+		Iterator<GrantedAuthority> it = auth.iterator();
+		String authlevel = null;
+		while(it.hasNext()) {
+			authlevel = it.next().getAuthority();
+		}
+		
 		try {
 			
 			if(profileImg != null && !profileImg.isEmpty()) { //파일이 있다면 mimetype검증
@@ -70,13 +85,23 @@ public class MemberUpdateService {
 					inputStream.close();
 					profileImg.transferTo(file); //파일 저장
 					
-					//저장후 DB업데이트
-					ProfileImgDTO profileImgDTO = new ProfileImgDTO();
-					profileImgDTO.setProfileImgname(savedFilename);
-					profileImgDTO.setmNum(loginUserDetails.getNum());
-					int resForNewImg = memberDAO.updateProfileImg(profileImgDTO);
-					logger.info("새 프로필 사진 업데이트 성공? : " + resForNewImg);
-					
+					//관리자 일경우
+					if(authlevel.equals("ROLE_ADMIN")) {
+						//저장후 DB업데이트
+						AdminDTO adminDTO = new AdminDTO();
+						adminDTO.setAdProfile(savedFilename);
+						adminDTO.setAdNum(loginUserDetails.getNum());
+						int resForNewImg = adminDAO.updateAdminProfileImg(adminDTO);
+						logger.info("관리자 새 프로필 사진 업데이트 성공? : " + resForNewImg);
+					}else {
+						//저장후 DB업데이트
+						//일반 멤버일경우
+						ProfileImgDTO profileImgDTO = new ProfileImgDTO();
+						profileImgDTO.setProfileImgname(savedFilename);
+						profileImgDTO.setmNum(loginUserDetails.getNum());
+						int resForNewImg = memberDAO.updateProfileImg(profileImgDTO);
+						logger.info("새 프로필 사진 업데이트 성공? : " + resForNewImg);
+					}
 					//DB업데이트 후 업데이트 전 사진 삭제
 					if(!loginUserDetails.getProfileImgname().equals(unknownProfile)) {//기존 파일이 기본사진이 아니면 삭제
 						oldFile = new File(path, loginUserDetails.getProfileImgname());
@@ -96,11 +121,20 @@ public class MemberUpdateService {
 				//뷰에서 기본프로필로 돌아가기 선택했을경우
 				if(memberUpdateCommand.isBackTobasicImg()) { 
 					
-					ProfileImgDTO profileImgDTO = new ProfileImgDTO();
-					profileImgDTO.setProfileImgname(unknownProfile);
-					profileImgDTO.setmNum(loginUserDetails.getNum());
-					int resForBasicImg = memberDAO.updateProfileImg(profileImgDTO);
-					logger.info("기본 프로필 사진 업데이트 성공? : " + resForBasicImg);
+					if(authlevel.equals("ROLE_ADMIN")) {
+						//저장후 DB업데이트
+						AdminDTO adminDTO = new AdminDTO();
+						adminDTO.setAdProfile(unknownProfile);
+						adminDTO.setAdNum(loginUserDetails.getNum());
+						int resForNewImg = adminDAO.updateAdminProfileImg(adminDTO);
+						logger.info("관리자 새 프로필 사진 업데이트 성공? : " + resForNewImg);
+					}else {
+						ProfileImgDTO profileImgDTO = new ProfileImgDTO();
+						profileImgDTO.setProfileImgname(unknownProfile);
+						profileImgDTO.setmNum(loginUserDetails.getNum());
+						int resForBasicImg = memberDAO.updateProfileImg(profileImgDTO);
+						logger.info("기본 프로필 사진 업데이트 성공? : " + resForBasicImg);
+					}
 					
 					//DB업데이트 후 업데이트 전 사진 삭제
 					if(!loginUserDetails.getProfileImgname().equals(unknownProfile)) {//기존 파일이 기본사진이 아니면 삭제
@@ -121,11 +155,19 @@ public class MemberUpdateService {
 			//회원정보 수정 시작
 			//세션에 저장되어있는 기존 닉네임과 커맨드객체의 닉네임이 일치하면 db접속 안함
 			if(!memberUpdateCommand.getNickname().equals(loginUserDetails.getNickname())) {
-				MemberDTO memberDTO = new MemberDTO();
-				memberDTO.setmNum(loginUserDetails.getNum());
-				memberDTO.setmNickname(memberUpdateCommand.getNickname());
+				int res = -1;
+				if(authlevel.equals("ROLE_ADMIN")) {
+					AdminDTO adminDTO = new AdminDTO();
+					adminDTO.setAdNum(loginUserDetails.getNum());
+					adminDTO.setAdNickname(memberUpdateCommand.getNickname());
+					res = adminDAO.updateAdminProfile(adminDTO);
+				}else {
+					MemberDTO memberDTO = new MemberDTO();
+					memberDTO.setmNum(loginUserDetails.getNum());
+					memberDTO.setmNickname(memberUpdateCommand.getNickname());
+					res = memberDAO.updateProfile(memberDTO);
+				}
 				
-				int res = memberDAO.updateProfile(memberDTO);
 				logger.info("닉네임 업데이트 성공? : " + res);
 			
 				if(res != 1) {

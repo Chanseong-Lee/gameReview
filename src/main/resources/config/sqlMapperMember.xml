@@ -8,22 +8,48 @@
 	<select id="selectAll" resultType="memberDTO">
 		select m.m_num, m.m_email, m.m_password, m.m_name, m.m_nickname, m.m_regdate, m.m_isvalid, m.m_point, at.auth_level
 		from member m, auth at
-		where m.auth_num=at.auth_num
+		where m.auth_num=at.auth_num order by m.m_num desc
 	</select>
+	
+	<select id="countAll" resultType="Integer">
+		select nvl(count(*), 0) 
+		from "MEMBER"
+	</select>
+	
 	<select id="selectBySeq" parameterType="Long" resultType="memberDTO">
-		select * from "MEMBER" 
-		where "M_NUM" = #{mNum}
+		select m.m_num, m.m_email, m.m_password, m.m_name, m.m_nickname, m.m_regdate, m.m_isvalid, m.m_point, at.auth_level
+		from member m, auth at
+		where m.m_num=#{mNum} and m.auth_num=at.auth_num order by m.m_num desc
 	</select>
 	
 	<select id="selectByEmail" parameterType="String" resultType="memberDTO">
 		select m.m_num, m.m_email, m.m_password, m.m_name, m.m_nickname, m.m_regdate, m.m_isvalid, m.m_point, at.auth_level
 		from member m, auth at
-		where m.m_email=#{mEamil} and m.auth_num=at.auth_num
+		where m.m_email=#{mEamil} and m.auth_num=at.auth_num order by m.m_num desc
 	</select>
+	
+	<select id="searchByEmail" parameterType="String" resultType="memberDTO">
+		select m.m_num, m.m_email, m.m_password, m.m_name, m.m_nickname, m.m_regdate, m.m_isvalid, m.m_point, at.auth_level
+		from member m, auth at
+		where m.m_email like '%'||#{mEmail}||'%' and m.auth_num=at.auth_num order by m.m_num desc
+	</select>
+	
+	<select id="searchByNickname" parameterType="String" resultType="memberDTO">
+		select m.m_num, m.m_email, m.m_password, m.m_name, m.m_nickname, m.m_regdate, m.m_isvalid, m.m_point, at.auth_level
+		from member m, auth at
+		where m.m_nickname like '%'||#{mNickname}||'%' and m.auth_num=at.auth_num order by m.m_num desc
+	</select>
+	
+	<select id="searchByName" parameterType="String" resultType="memberDTO">
+		select m.m_num, m.m_email, m.m_password, m.m_name, m.m_nickname, m.m_regdate, m.m_isvalid, m.m_point, at.auth_level
+		from member m, auth at
+		where m.m_name like '%'||#{mName}||'%' and m.auth_num=at.auth_num order by m.m_num desc
+	</select>
+	
 	<select id="selectByEmailAndName" parameterType="hashmap" resultType="memberDTO">
 		select m.m_num, m.m_email, m.m_password, m.m_name, m.m_nickname, m.m_regdate, m.m_isvalid, m.m_point, at.auth_level
 		from member m, auth at
-		where m.m_email=#{email} and m.m_name=#{name} and m.auth_num=at.auth_num
+		where m.m_email=#{email} and m.m_name=#{name} and m.auth_num=at.auth_num order by m.m_num desc
 	</select>
 	
 	<select id="countByEmailAndName" parameterType="hashmap" resultType="Integer">
@@ -49,7 +75,7 @@
 	<select id="selectByNickname" parameterType="String" resultType="memberDTO">
 		select m.m_num, m.m_email, m.m_password, m.m_name, m.m_nickname, m.m_regdate, m.m_isvalid, m.m_point, at.auth_level
 		from member m, auth at
-		where m.m_nickname=#{mNickname} and m.auth_num=at.auth_num
+		where m.m_nickname=#{mNickname} and m.auth_num=at.auth_num order by m.m_num desc
 	</select>
 	
 	<!-- 회원가입 직후는 권한 레벨 1 -->
@@ -83,6 +109,12 @@
 	<update id ="updateProfile" parameterType="memberDTO">
 		update "MEMBER" 
 		set "M_NICKNAME"=#{mNickname} 
+		where "M_NUM"=#{mNum}
+	</update>
+	
+	<update id="updateProfileByAdmin" parameterType="memberDTO">
+		update "MEMBER"
+		set "M_NAME"=#{mName}, "M_NICKNAME"=#{mNickname}, "M_POINT"=#{mPoint}
 		where "M_NUM"=#{mNum}
 	</update>
 	

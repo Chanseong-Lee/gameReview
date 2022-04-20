@@ -15,7 +15,7 @@ import com.game.review.HomeController;
 
 public class LoginAccessDeniedHandler implements AccessDeniedHandler {
 	
-	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+	private static final Logger logger = LoggerFactory.getLogger(LoginAccessDeniedHandler.class);
 	@Override
 	public void handle(HttpServletRequest request, HttpServletResponse response,
 			AccessDeniedException accessDeniedException) throws IOException, ServletException {

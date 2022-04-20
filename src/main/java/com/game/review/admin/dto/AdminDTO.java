@@ -1,4 +1,4 @@
-package com.game.review.member.dto;
+package com.game.review.admin.dto;
 
 import java.sql.Timestamp;
 
@@ -13,6 +13,7 @@ public class AdminDTO {
 	private String adKey;
 	private Long adPoint;
 	private String authLevel;
+	private String adProfile;
 	
 	public Long getAdNum() {
 		return adNum;
@@ -62,6 +63,13 @@ public class AdminDTO {
 	public void setAuthLevel(String authLevel) {
 		this.authLevel = authLevel;
 	}
+	public String getAdProfile() {
+		return adProfile;
+	}
+	public void setAdProfile(String adProfile) {
+		this.adProfile = adProfile;
+	}
+
 	
 	
 }

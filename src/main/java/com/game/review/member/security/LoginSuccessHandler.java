@@ -23,7 +23,7 @@ import com.game.review.member.command.LoginUserDetails;
 @Service
 public class LoginSuccessHandler implements AuthenticationSuccessHandler{
 	
-	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+	private static final Logger logger = LoggerFactory.getLogger(LoginSuccessHandler.class);
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException, ServletException {

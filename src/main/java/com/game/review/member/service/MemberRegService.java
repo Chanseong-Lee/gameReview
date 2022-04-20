@@ -22,11 +22,11 @@ import com.game.review.member.dto.ProfileImgDTO;
 import com.game.review.member.email.MailUtils;
 import com.game.review.member.email.TempKey;
 import com.game.review.member.exception.AlreadyExistEmailException;
-import com.game.review.member.exception.noExistValidKeyException;
+import com.game.review.member.exception.NoExistValidKeyException;
 @Service
 public class MemberRegService {
 
-	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+	private static final Logger logger = LoggerFactory.getLogger(MemberRegService.class);
 	
 	@Autowired
 	private MemberDAO memberDAO;
@@ -100,7 +100,7 @@ public class MemberRegService {
 		logger.debug("validKey : "+ validKey);
 		logger.debug("existValidKey : "+ existValidKey);
 		if(existValidKey != 1) {
-			throw new noExistValidKeyException();
+			throw new NoExistValidKeyException();
 		}
 		Map<String, String> dataValues = new HashMap<>();
 		logger.debug("에러나면 이건 출력되면 안됨");

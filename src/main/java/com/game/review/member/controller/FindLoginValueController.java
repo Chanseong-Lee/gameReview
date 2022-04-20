@@ -23,7 +23,7 @@ import com.game.review.member.validate.FindLoginDataCommandValidator;
 @Controller
 public class FindLoginValueController {
 	
-	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+	private static final Logger logger = LoggerFactory.getLogger(FindLoginValueController.class);
 	
 	@Autowired
 	private FindLoginDataService findLoginDataService;
