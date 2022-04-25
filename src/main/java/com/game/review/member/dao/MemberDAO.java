@@ -43,6 +43,9 @@ public interface MemberDAO {
 	//회원가입 시 디폴트 프로필 이미지 삽입
 	public int insertDefaultProfileImg(String mEmail);
 	
+	//회원가입 시 디폴트 아이콘 세팅
+	public int insertDefaultIcon(String mEmail);
+	
 	//프로필사진 수정
 	public int updateProfileImg(ProfileImgDTO profileImgDTO);
 	

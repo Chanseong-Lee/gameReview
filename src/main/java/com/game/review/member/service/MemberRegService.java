@@ -66,6 +66,9 @@ public class MemberRegService {
 		//default profile img setting
 		memberDAO.insertDefaultProfileImg(mc.getEmail());
 		
+		//default icon setting
+		memberDAO.insertDefaultIcon(mc.getEmail());
+		
 		//send mail for verification
 		MailUtils sendMail = new MailUtils(mailSender);
 		logger.debug("mc.getName() : " + mc.getName());

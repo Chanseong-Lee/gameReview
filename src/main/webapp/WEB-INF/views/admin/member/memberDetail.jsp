@@ -75,10 +75,17 @@ td{
 	</tr>
 </table>
 <br>
-<button type="button" onclick="location.href='${pageContext.request.contextPath}/admin/member/memberUpdate/${member.mNum }'">회원정보 수정하기</button>&nbsp;&nbsp;
+<button type="button" onclick="location.href='${pageContext.request.contextPath}/admin/member/memberUpdate/${member.mNum }'">회원정보 수정하기</button>
+<button type="button" onclick="deleteMember()">강제탈퇴</button>
 <button type="button" onclick="location.href='${pageContext.request.contextPath}/admin/member/memberList'">목록으로</button>
-
-
 </article>
+<script>
+function deleteMember(){
+	let flag = confirm('정말로 탈퇴시키시겠습니까?');
+	if(flag){
+		location.href='${pageContext.request.contextPath}/admin/member/memberDelete/${member.mNum }';
+	}
+}
+</script>
 </body>
 </html>

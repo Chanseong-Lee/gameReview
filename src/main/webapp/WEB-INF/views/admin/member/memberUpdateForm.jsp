@@ -124,7 +124,7 @@ function setTumbnail(){
 	}
 	if(fileInfo){
 		reader.readAsDataURL(fileInfo);
-		backToBasicImg = false;
+		document.querySelector("#backToBasicImg").value = false;
 	}
 	
 }

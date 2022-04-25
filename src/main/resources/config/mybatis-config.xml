@@ -12,5 +12,7 @@
 		<typeAlias type="com.game.review.admin.dto.AdminDTO"/>
 		<typeAlias type="com.game.review.member.dto.MemberDTO"/>
 		<typeAlias type="com.game.review.member.dto.ProfileImgDTO"/>
+		<typeAlias type="com.game.review.pointshop.dto.ItemsDTO"/>
+		<typeAlias type="com.game.review.pointshop.dto.InventoryDTO"/>
 	</typeAliases>
 </configuration>

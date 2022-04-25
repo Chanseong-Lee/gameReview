@@ -31,7 +31,7 @@ td {
 			</tr>
 			<tr>
 				<td>이름</td>
-				<td><form:input id="name" path="name" oninput="checkName()" autocomplete='off'/><br>
+				<td><form:input id="name" path="name" oninput="checkName()" autocomplete='off'/> *이름은 수정이 불가능 하오니 정확히 기입하세요.<br>
 				 	<span class="errorAfterSubmit"><form:errors path="name" /></span>
 				 	<span id="nameError"></span>
 				 </td>

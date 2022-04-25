@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="pointshopDAO">
+	
+	<!-- 관리자가 아이콘 등록 -->
+	<insert id="insertIconByAdmin" parameterType="itemsDTO">
+		insert into "ITEMS" 
+		values("ITEMS_SEQ".nextval, #{itemName}, #{itemFilename}, #{itemPrice}, sysdate)
+	</insert>
+	
+	<!-- 관리자페이지 아이템 목록 -->
+	<select id="selectItems" resultType="itemsDTO">
+		select * 
+		from "ITEMS"
+	</select>
+	
+	<!-- 아이콘이름 중복 확인용  -->
+	<select id="countByItemName" parameterType="String" resultType="Integer">
+		select nvl(count(*), 0) 
+		from "ITEMS"
+		where "ITEM_NAME" = #{itemName}
+	</select>
+	
+	<!-- detail용 -->
+	<select id="selectItemsBySeq" parameterType="Long" resultType="itemsDTO">
+		select * 
+		from "ITEMS"
+		where "ITEM_NUM" = #{itemNum}
+	</select>
+	
+	<update id="updateItemNamePrice" parameterType="itemsDTO">
+		update "ITEMS" 
+		set "ITEM_NAME" = #{itemName}, "ITEM_PRICE" = #{itemPrice}
+		where "ITEM_NUM" = #{itemNum}
+	</update>
+	
+	<update id="updateItemFilename" parameterType="itemsDTO">
+		update "ITEMS" 
+		set "ITEM_FILENAME" = #{itemFilename}
+		where "ITEM_NUM" = #{itemNum}
+	</update>
+	
+	
+</mapper>

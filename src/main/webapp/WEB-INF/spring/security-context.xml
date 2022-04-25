@@ -18,6 +18,7 @@
 		<security:csrf disabled="true"/>
 		<security:intercept-url pattern="/member/loginForm" access="permitAll" />
 		<security:intercept-url pattern="/member/logoutSuccess" access="permitAll" />
+		<security:intercept-url pattern="/member/delete/deleteSuccess" access="permitAll" />
 		<security:intercept-url pattern="/member/logout" access="hasAnyRole('ROLE_USER, ROLE_ADMIN')" />
 		<security:intercept-url pattern="/member/update/**" access="hasAnyRole('ROLE_USER, ROLE_ADMIN')" />
 		<security:intercept-url pattern="/member/delete" access="hasAnyRole('ROLE_USER, ROLE_ADMIN')" />

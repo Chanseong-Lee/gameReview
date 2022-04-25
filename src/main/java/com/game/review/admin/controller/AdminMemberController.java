@@ -93,7 +93,7 @@ public class AdminMemberController {
 			BindingResult errors,
 			Model model) {
 		
-		logger.info(""+amuc);
+		logger.info(amuc.toString());
 		try {
 			MemberDTO member = adminMemberService.detail(num);
 			ProfileImgDTO img = adminMemberService.profileImg(num);
@@ -116,6 +116,17 @@ public class AdminMemberController {
 			return "admin/member/memberUpdateForm";
 		}catch(NoSessionDbMatchException e) {
 			logger.error("세션이상!");
+			return "exceptions/profileUpdateEx";
+		}
+	}
+	@RequestMapping(value="/admin/member/memberDelete/{num}", method=RequestMethod.GET)
+	public String memberDelete(@PathVariable Long num) {
+		
+		int res = adminMemberService.memberDelete(num);
+		if(res == 1) {
+			
+			return "admin/member/deleteSuccess";
+		}else {
 			return "exceptions/profileUpdateEx";
 		}
 	}

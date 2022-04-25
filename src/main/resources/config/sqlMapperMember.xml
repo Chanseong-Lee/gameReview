@@ -93,6 +93,12 @@
 		values("PROFILE_IMG_SEQ".nextval, (select "M_NUM" from "MEMBER" where "M_EMAIL" = #{mEmail}));
 	</insert>
 	
+	<!-- 회원가입시 디폴트 아이콘 세팅 -->
+	<insert id="insertDefaultIcon" parameterType="String">
+		insert into "INVENTORY"("INVEN_NUM", "M_NUM", "ITEM_NUM", "INVEN_USE")
+		values("INVENTORY_SEQ".nextval, (select "M_NUM" from "MEMBER" where "M_EMAIL" = #{mEmail}), 1, 'Y')
+	</insert>
+	
 	<!-- 이메일 인증키 비교해서 count가 1이상이면 인증 성공하도록 -->
 	<select id="countByValidKey" parameterType="String" resultType="Integer">
 		select count(*) from "MEMBER"
@@ -142,7 +148,7 @@
 		where "M_EMAIL"=#{mEmail}
 	</update>
 	
-	<delete id="delete" parameterType="Long">
+	<delete id="deleteMember" parameterType="Long">
 		delete from "MEMBER" 
 		where "M_NUM" = #{mNum}
 	</delete>

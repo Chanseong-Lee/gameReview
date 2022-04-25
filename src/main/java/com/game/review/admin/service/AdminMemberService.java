@@ -155,7 +155,6 @@ public class AdminMemberService {
 			}
 			
 			//회원정보 수정
-			int res = -1;
 			MemberDTO memberDTO = new MemberDTO();
 			memberDTO.setmName(amuc.getName());
 			memberDTO.setmNickname(amuc.getNickname());
@@ -167,7 +166,14 @@ public class AdminMemberService {
 			logger.error("IO예외발생!");
 			e.printStackTrace();
 		}
-		
+	}
+	
+	public int memberDelete(Long num) {
+		int res = memberDAO.delete(num);
+		if(res != 1) {
+			logger.error("삭제실패!!!!!!");
+		}
+		return res;
 	}
 
 }

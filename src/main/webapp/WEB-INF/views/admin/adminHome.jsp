@@ -13,6 +13,7 @@
 	<li><a href="${pageContext.request.contextPath}/member/logout">로그아웃</a></li>
 	<li><a href="${pageContext.request.contextPath}/admin/game/gameList">게임관리</a></li>
 	<li><a href="${pageContext.request.contextPath}/admin/member/memberList">회원관리</a></li>
+	<li><a href="${pageContext.request.contextPath}/admin/item/itemList">아이템관리</a></li>
 	<li><a href="${pageContext.request.contextPath}/game/main">사용자페이지로</a></li>
 </ol>
 </div>

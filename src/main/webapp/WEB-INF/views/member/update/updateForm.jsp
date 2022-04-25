@@ -45,12 +45,20 @@ td{
 	
 }
 
+#deleteForm{
+	text-align: center;
+	border: solid 2px gray;
+	padding : 20px;
+	width: 280px;
+}
+
 </style>
 </head>
 <body>
 <h1>회원정보 수정</h1>
 <button type="button" onclick="fetchPage('ajaxMemberUpdateForm')">회원정보 수정하기</button>
 <button type="button" onclick="fetchPage('ajaxPwdUpdateForm')">비밀번호 수정하기</button>
+<button type="button" onclick="fetchPage('ajaxMemberDeleteForm')">탈퇴하기</button>
 <br><br>
 <article></article>
 
@@ -222,6 +230,27 @@ let updatePwdBtn = function () {
 		}
 	}
 }
+
+function deleteBtn(){
+	let isAgreed = confirm("정말로 탈퇴하시겠습니까?");
+	if(isAgreed){
+		fetch('ajaxMemberDelete', {
+			method:'POST',
+		}).then(function(response){
+			return response.text();
+		}).then(function(text){
+			//탈퇴성공 1, 탈퇴 실패 2
+			if(text=='1'){
+				window.location.href='${pageContext.request.contextPath}/member/delete/deleteSuccess';
+			}else{
+				alert("서버문제 발생! 관리자에게 문의하십시오!\n프로필 화면으로 이동합니다.");
+				window.location.href="${pageContext.request.contextPath}/member/update/profile";
+			}
+		})
+		
+	}
+}
+
 
 function setTumbnail(){
 	let fileInfo = document.getElementById("profileImg").files[0];

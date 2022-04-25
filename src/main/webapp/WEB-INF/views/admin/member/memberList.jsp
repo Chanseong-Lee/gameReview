@@ -95,6 +95,6 @@ a:visited {
 	</div>
 </article>
 
-<br><a href="${pageContext.request.contextPath}/admin/home">관리자페이지로</a>
+<br><a href="${pageContext.request.contextPath}/admin/home">관리자홈으로</a>
 </body>
 </html>

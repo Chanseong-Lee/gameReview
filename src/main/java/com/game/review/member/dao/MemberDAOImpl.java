@@ -62,6 +62,13 @@ public class MemberDAOImpl implements MemberDAO {
 	}
 	
 	@Override
+	public int insertDefaultIcon(String mEmail) {
+		// TODO Auto-generated method stub
+		return sqlSessionTemplate.insert("insertDefaultIcon", mEmail);
+	}
+
+	
+	@Override
 	public int updateProfileImg(ProfileImgDTO profileImgDTO) {
 		return sqlSessionTemplate.update("updateProfileImg", profileImgDTO);
 	}
@@ -73,8 +80,7 @@ public class MemberDAOImpl implements MemberDAO {
 
 	@Override
 	public int delete(Long mNum) {
-		// TODO Auto-generated method stub
-		return 0;
+		return sqlSessionTemplate.delete("deleteMember", mNum);
 	}
 
 	@Override
@@ -134,4 +140,5 @@ public class MemberDAOImpl implements MemberDAO {
 		return sqlSessionTemplate.update("updateProfileByAdmin", memberDTO); 
 	}
 
+	
 }
