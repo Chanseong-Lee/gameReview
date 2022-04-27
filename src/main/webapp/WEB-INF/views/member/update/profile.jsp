@@ -34,6 +34,7 @@ td{
 <body>
 <h1>회원 프로필</h1>
 <sec:authentication property='principal.profileImgname' var="profileImg" />
+<sec:authentication property="principal.usingIcon" var="icon"/>
 <table>
 	<tr>
 		<td colspan="2">
@@ -58,7 +59,18 @@ td{
 	</tr>
 	<tr>
 		<td>닉네임</td>
-		<td><sec:authentication property="principal.nickname"/></td>
+		<td>
+			<c:if test="${icon == 'default_icon.png' }">
+				<img alt="아이콘이미지" src="<c:url value='/resources/images/user_icon/${icon}'/>" width="15">
+			</c:if>
+			<c:if test="${icon == 'default_admin_icon.png' }">
+				<img alt="아이콘이미지" src="<c:url value='/resources/images/user_icon/${icon}'/>" width="15">
+			</c:if>
+			<c:if test="${icon != 'default_icon.png' && icon != 'default_admin_icon.png'}">
+				<img alt="아이콘이미지" src="<c:url value='/images/icons/${icon}'/>" width="15">
+			</c:if>
+			<sec:authentication property="principal.nickname"/>
+		</td>
 	</tr>
 	<tr>
 		<td>가입일</td>

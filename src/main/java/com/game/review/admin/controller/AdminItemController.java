@@ -59,7 +59,7 @@ public class AdminItemController {
 		try {
 			adminItemService.addItem(addItemCommand);
 			
-			return "redirect:/admin/item/itemList";
+			return "admin/item/addItemSuccess";
 			
 		}catch(NoValueException e) {
 			logger.error("파일업로드 안함!");
@@ -122,5 +122,14 @@ public class AdminItemController {
 		
 	}
 	
+	@RequestMapping(value="/admin/item/itemDelete/{num}", method=RequestMethod.GET)
+	public String itemDelete(@PathVariable Long num) {
+		int res = adminItemService.itemDelete(num);
+		if(res == 1) {
+			return "admin/item/deleteSuccess";
+		}else {
+			return "exceptions/iconUpdateEx";
+		}
+	}
 	
 }

@@ -116,7 +116,7 @@ public class AdminMemberController {
 			return "admin/member/memberUpdateForm";
 		}catch(NoSessionDbMatchException e) {
 			logger.error("세션이상!");
-			return "exceptions/profileUpdateEx";
+			return "exceptions/profileUpdateExByAdmin";
 		}
 	}
 	@RequestMapping(value="/admin/member/memberDelete/{num}", method=RequestMethod.GET)

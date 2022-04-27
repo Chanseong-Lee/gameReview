@@ -16,6 +16,8 @@ import com.game.review.member.command.LoginUserDetails;
 import com.game.review.member.dao.MemberDAO;
 import com.game.review.member.dto.MemberDTO;
 import com.game.review.member.dto.ProfileImgDTO;
+import com.game.review.pointshop.dao.PointshopDAO;
+import com.game.review.pointshop.dto.InventoryDTO;
 
 // 시큐리티 설정에서  login-page="/member/login"
 // /member/login요청이 오면 자동으로 UserDetailsService타입으로 IoC되어있는  loadUserByUsername()가 호출됨
@@ -28,6 +30,9 @@ public class LoginUserDetailsService implements UserDetailsService {
 
 	@Autowired
 	private AdminDAO adminDAO;
+	
+	@Autowired
+	private PointshopDAO pointshopDAO;
 
 	//시큐리티 session(내부에 Authentication(내부에  UserDetails))
 	//loadUserByUsername가 호출되면  Authentication객체를 만들어주고 UserDetails를 그안에 리턴시킨다.
@@ -43,6 +48,7 @@ public class LoginUserDetailsService implements UserDetailsService {
 		if (admin == null && member != null && member.getAuthLevel().equals("ROLE_USER")) {
 			// 일반회원
 			ProfileImgDTO img = (ProfileImgDTO) memberDAO.selectProfileImg(member.getmNum());
+			InventoryDTO icon = (InventoryDTO) pointshopDAO.selectUsingItemBymNum(member.getmNum());
 			loginUserDetails = new LoginUserDetails(member.getmEmail(), member.getmPassword(),
 					AuthorityUtils.createAuthorityList(member.getAuthLevel())
 					);
@@ -52,8 +58,10 @@ public class LoginUserDetailsService implements UserDetailsService {
 			loginUserDetails.setPoint(member.getmPoint());
 			loginUserDetails.setRegdate(member.getmRegdate());
 			loginUserDetails.setProfileImgname(img.getProfileImgname());
+			loginUserDetails.setUsingIcon(icon.getItemFilename());
 			return loginUserDetails;
-		} else if(admin == null && member != null && member.getAuthLevel().equals("ROLE_GUEST")) {	//이메일 인증 안한사람은 권한 게스트. 로그인 불가..
+		} else if(admin == null && member != null && member.getAuthLevel().equals("ROLE_GUEST")) {	
+			//이메일 인증 안한사람은 권한 게스트. 로그인 불가..
 			loginUserDetails = new LoginUserDetails(member.getmEmail(), member.getmPassword(), false,
 					AuthorityUtils.createAuthorityList(member.getAuthLevel())
 					);
@@ -66,6 +74,7 @@ public class LoginUserDetailsService implements UserDetailsService {
 			return loginUserDetails;
 		} else if (member == null && admin != null && admin.getAuthLevel().equals("ROLE_ADMIN")) {
 			// 관리자일때
+			InventoryDTO icon = (InventoryDTO) pointshopDAO.selectUsingAdminItemBymNum(admin.getAdNum());
 			loginUserDetails = new LoginUserDetails(admin.getAdId(), admin.getAdPassword(),
 					AuthorityUtils.createAuthorityList(admin.getAuthLevel())
 					);
@@ -75,6 +84,7 @@ public class LoginUserDetailsService implements UserDetailsService {
 			loginUserDetails.setPoint(admin.getAdPoint());
 			loginUserDetails.setRegdate(admin.getAdRegdate());
 			loginUserDetails.setProfileImgname(admin.getAdProfile());
+			loginUserDetails.setUsingIcon(icon.getItemFilename());
 			return loginUserDetails;
 		} else {
 			// 어디에도 없을때는 예외

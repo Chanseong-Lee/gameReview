@@ -14,6 +14,7 @@
 	<select id="selectItems" resultType="itemsDTO">
 		select * 
 		from "ITEMS"
+		order by "ITEM_NUM" desc
 	</select>
 	
 	<!-- 아이콘이름 중복 확인용  -->
@@ -29,7 +30,7 @@
 		from "ITEMS"
 		where "ITEM_NUM" = #{itemNum}
 	</select>
-	
+	<!-- 아이템 수정 -->
 	<update id="updateItemNamePrice" parameterType="itemsDTO">
 		update "ITEMS" 
 		set "ITEM_NAME" = #{itemName}, "ITEM_PRICE" = #{itemPrice}
@@ -41,6 +42,170 @@
 		set "ITEM_FILENAME" = #{itemFilename}
 		where "ITEM_NUM" = #{itemNum}
 	</update>
+	<!-- 아이템 삭제 -->
+	<delete id="deleteItemBySeq" parameterType="Long">
+		delete from "ITEMS"
+		where "ITEM_NUM"=#{itemNum}
+	</delete>
+	
+	<!-- 상점 아이템목록 -->
+	<select id="selectItemsForShop" parameterType="Long" resultType="shopDTO">
+		select 
+    		it.item_num, 
+    		it.item_name, 
+    		it.item_filename,
+    		it.item_price, 
+    		it.item_regdate, 
+   		 	case 
+       	 	when (select count(iv.m_num) from inventory iv where iv.m_num=#{mNum} and iv.item_num in it.item_num)=1 then 'Y' 
+        	when (select count(iv.m_num) from inventory iv where iv.m_num=#{mNum} and iv.item_num in it.item_num)!=1 then 'N'
+			end as "IS_SOLD" 
+		from items it where not it.item_num in (1, 6)
+		group by it.item_num, it.item_name, it.item_filename, it.item_price, it.item_regdate
+		order by it.item_num desc
+	</select>
+	
+	<!-- 관리자용 상점 목록 -->
+	<select id="selectAdminItemsForShop" parameterType="Long" resultType="shopDTO">
+		select 
+    		it.item_num, 
+    		it.item_name, 
+    		it.item_filename,
+    		it.item_price, 
+    		it.item_regdate, 
+    		case 
+        	when (select count(iv.ad_num) from admin_inventory iv where iv.ad_num=#{adNum} and iv.item_num in it.item_num)=1 then 'Y' 
+        	when (select count(iv.ad_num) from admin_inventory iv where iv.ad_num=#{adNum} and iv.item_num in it.item_num)!=1 then 'N'
+        	end as "IS_SOLD" 
+		from items it where not it.item_num in (1, 6)
+		group by it.item_num, it.item_name, it.item_filename, it.item_price, it.item_regdate 
+		order by it.item_num desc
+	</select>
+	
+	<!-- 아이템구매 -->
+	<insert id="insertInventory" parameterType="inventoryDTO">
+		insert into "INVENTORY"("INVEN_NUM", "M_NUM", "ITEM_NUM", "INVEN_USE") 
+		values("INVENTORY_SEQ".nextval, #{mNum}, #{itemNum}, 'N')
+	</insert>
+	
+	<!-- 관리자용 아이템 구매 -->
+	<insert id="insertAdminInventory" parameterType="inventoryDTO">
+		insert into "ADMIN_INVENTORY"("INVEN_NUM", "AD_NUM", "ITEM_NUM", "INVEN_USE") 
+		values("INVENTORY_SEQ".nextval, #{adNum}, #{itemNum}, 'N')
+	</insert>
+	
+	<!-- 아이템구매후 포인트 차감 -->
+	<update id="updateMemberPoint" parameterType="memberDTO">
+		update "MEMBER"
+		set "M_POINT"= #{mPoint}
+		where "M_NUM"=#{mNum}
+	</update>
+	
+	<!-- 관리자는 포인트 차감 안함 -->
+	
+	<!-- 인벤토리 목록 -->
+	<select id="selectInventoryBySeq" parameterType="Long" resultType="inventoryDTO">
+		select 
+			iv.inven_num, 
+			iv.m_num, 
+			iv.inven_use,
+			iv.item_num, 
+			it.item_name, 
+			it.item_filename, 
+			it.item_price, 
+			it.item_regdate 
+		from inventory iv, items it 
+		where 
+			iv.item_num=it.item_num and 
+			iv.m_num=#{mNum}
+	</select>
+	
+	<!-- 관리자 인벤토리 목록 -->
+	<select id="selectAdminInventoryBySeq" parameterType="Long" resultType="inventoryDTO">
+		select 
+			iv.inven_num, 
+			iv.ad_num, 
+			iv.inven_use,
+			iv.item_num, 
+			it.item_name, 
+			it.item_filename, 
+			it.item_price, 
+			it.item_regdate 
+		from admin_inventory iv, items it 
+		where 
+			iv.item_num=it.item_num and 
+			iv.ad_num=#{adNum}
+	</select>
+	
+	<!-- 아이템 선택로직 -->
+	<update id="updateInvenUseToNo" parameterType="inventoryDTO">
+		update "INVENTORY" 
+		set "INVEN_USE"='N' 
+		where "M_NUM"=#{mNum} and "INVEN_USE"='Y'
+	</update>
+	<update id="updateInvenUseToYes" parameterType="inventoryDTO">
+		update "INVENTORY" 
+		set "INVEN_USE"='Y' 
+		where "M_NUM"=#{mNum} and "ITEM_NUM" = #{itemNum}
+	</update>
+	
+	<!-- 관리자용 아이템 선택 로직 -->
+	<update id="updateAdminInvenUseToNo" parameterType="inventoryDTO">
+		update "ADMIN_INVENTORY" 
+		set "INVEN_USE"='N' 
+		where "AD_NUM"=#{adNum} and "INVEN_USE"='Y'
+	</update>
+	<update id="updateAdminInvenUseToYes" parameterType="inventoryDTO">
+		update "ADMIN_INVENTORY" 
+		set "INVEN_USE"='Y' 
+		where "AD_NUM"=#{adNum} and "ITEM_NUM" = #{itemNum}
+	</update>
 	
 	
+	<!-- 인벤토리에서 아이템 제거 -->
+	<delete id="deleteItemInInven" parameterType="inventoryDTO">
+		delete from "INVENTORY" 
+		where "ITEM_NUM"=#{itemNum} and "M_NUM"=#{mNum}
+	</delete>
+	
+	<!-- 관리자용 인벤토리에서 아이템 제거 -->
+	<delete id="deleteAdminItemInInven" parameterType="inventoryDTO">
+		delete from "ADMIN_INVENTORY" 
+		where "ITEM_NUM"=#{itemNum} and "AD_NUM"=#{adNum}
+	</delete>
+	
+	<!-- 사용중인 아이템 출력 -->
+	<select id="selectUsingItemBymNum" parameterType="Long" resultType="InventoryDTO">
+		select 
+			iv.inven_num, 
+			iv.m_num, 
+			iv.inven_use, 
+			iv.item_num, 
+			it.item_name, 
+			it.item_filename, 
+			it.item_price, 
+			it.item_regdate 
+		from inventory iv, items it 
+		where 
+			iv.item_num=it.item_num and 
+			iv.m_num=#{mNum} and 
+			iv.inven_use='Y'
+	</select>
+	<!-- 관리자용 사용중인 아이템 출력 -->
+	<select id="selectUsingAdminItemBymNum" parameterType="Long" resultType="InventoryDTO">
+		select 
+			iv.inven_num, 
+			iv.ad_num, 
+			iv.inven_use, 
+			iv.item_num, 
+			it.item_name, 
+			it.item_filename, 
+			it.item_price, 
+			it.item_regdate 
+		from admin_inventory iv, items it 
+		where 
+			iv.item_num=it.item_num and 
+			iv.ad_num=#{adNum} and 
+			iv.inven_use='Y'
+	</select>
 </mapper>

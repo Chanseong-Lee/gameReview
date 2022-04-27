@@ -4,35 +4,14 @@ import java.sql.Timestamp;
 
 import org.apache.ibatis.type.Alias;
 
-@Alias("inventoryDTO")
-public class InventoryDTO {
-	private Long invenNum;
-	private Long mNum;
-	private Long adNum;
-	private String invenUse;
+@Alias("shopDTO")
+public class ShopDTO {
 	private Long itemNum;
 	private String itemName;
 	private String itemFilename;
 	private Long itemPrice;
 	private Timestamp itemRegdate;
-	public Long getInvenNum() {
-		return invenNum;
-	}
-	public void setInvenNum(Long invenNum) {
-		this.invenNum = invenNum;
-	}
-	public Long getmNum() {
-		return mNum;
-	}
-	public void setmNum(Long mNum) {
-		this.mNum = mNum;
-	}
-	public String getInvenUse() {
-		return invenUse;
-	}
-	public void setInvenUse(String invenUse) {
-		this.invenUse = invenUse;
-	}
+	private String isSold;
 	public Long getItemNum() {
 		return itemNum;
 	}
@@ -63,19 +42,17 @@ public class InventoryDTO {
 	public void setItemRegdate(Timestamp itemRegdate) {
 		this.itemRegdate = itemRegdate;
 	}
-	
-	public Long getAdNum() {
-		return adNum;
+	public String getIsSold() {
+		return isSold;
 	}
-	public void setAdNum(Long adNum) {
-		this.adNum = adNum;
+	public void setIsSold(String isSold) {
+		this.isSold = isSold;
 	}
-	
 	@Override
 	public String toString() {
-		return "InventoryDTO [invenNum=" + invenNum + ", mNum=" + mNum + ", adNum=" + adNum + ", invenUse=" + invenUse
-				+ ", itemNum=" + itemNum + ", itemName=" + itemName + ", itemFilename=" + itemFilename + ", itemPrice="
-				+ itemPrice + ", itemRegdate=" + itemRegdate + "]";
+		return "ShopDTO [itemNum=" + itemNum + ", itemName=" + itemName + ", itemFilename=" + itemFilename
+				+ ", itemPrice=" + itemPrice + ", itemRegdate=" + itemRegdate + ", isSold=" + isSold + "]";
 	}
+	
 	
 }

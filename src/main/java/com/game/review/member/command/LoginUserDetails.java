@@ -20,6 +20,7 @@ public class LoginUserDetails extends User {
 	private Long point;
 	private Timestamp regdate;
 	private String profileImgname;
+	private String usingIcon;
 	
 	public LoginUserDetails(String username, String password, Collection<? extends GrantedAuthority> authorities) {
 		super(username, password, authorities);
@@ -94,6 +95,16 @@ public class LoginUserDetails extends User {
 	public void setProfileImgname(String profileImgname) {
 		this.profileImgname = profileImgname;
 	}
+
+	public String getUsingIcon() {
+		return usingIcon;
+	}
+
+	public void setUsingIcon(String usingIcon) {
+		this.usingIcon = usingIcon;
+	}
+	
+	
 
 
 }

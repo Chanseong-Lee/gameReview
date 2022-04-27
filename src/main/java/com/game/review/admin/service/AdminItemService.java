@@ -152,6 +152,30 @@ public class AdminItemService {
 		}
 	}
 	
+	@Transactional
+	public int itemDelete(Long num) {
+		//아이콘 삭제할때 서버 이미지도 삭제
+		ItemsDTO item = (ItemsDTO) pointshopDAO.selectItemsBySeq(num);
+		String imgName = item.getItemFilename();
+		String path = "C:\\stsproject\\upload\\images\\icons";
+		String DEFAULT_ICON_NAME = "default_icon.png";
+		File file = new File(path, imgName);
+		
+		//기본아이콘이 아니면 삭제
+		if(!imgName.equals(DEFAULT_ICON_NAME)) {
+			if(file.exists()) {
+				if(file.delete()) {
+					logger.info("기존 아이콘사진 삭제 성공!");
+				}else {
+					logger.error("기존 아이콘사진 삭제 실패!");
+				}
+			}
+		}
+		//DB데이터 삭제
+		int resDelete = pointshopDAO.deleteItemBySeq(num);
+		
+		return resDelete;
+	}
 	
 	
 }
