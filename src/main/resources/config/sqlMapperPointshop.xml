@@ -208,4 +208,8 @@
 			iv.ad_num=#{adNum} and 
 			iv.inven_use='Y'
 	</select>
+	
+	<select id="countAllItem" resultType="Integer">
+		select nvl(count(*), 0) from "ITEMS"
+	</select>
 </mapper>

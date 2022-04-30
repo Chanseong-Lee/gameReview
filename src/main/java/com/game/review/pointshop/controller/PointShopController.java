@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.game.review.member.command.LoginUserDetails;
 import com.game.review.member.exception.FailToInsertException;
+import com.game.review.member.exception.PointMinusException;
 import com.game.review.pointshop.dto.ShopDTO;
 import com.game.review.pointshop.service.PointShopService;
 
@@ -50,6 +51,9 @@ public class PointShopController {
 		}catch(FailToInsertException e) {
 			logger.error("구매실패");
 			return "exceptions/failToInsertEx";
+		}catch (PointMinusException e) {
+			logger.error("포인트 부족");
+			return "exceptions/failToPurchaseEx";
 		}
 		
 	}

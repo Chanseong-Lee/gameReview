@@ -37,8 +37,8 @@ public class AdminMemberService {
 		return memberDAO.selectAll();
 	}
 	
-	public int countAll() {
-		return memberDAO.countAll();
+	public int countAllMember() {
+		return memberDAO.countAllMember();
 	}
 	
 	public List<MemberDTO> search(SearchCommand searchCommand){

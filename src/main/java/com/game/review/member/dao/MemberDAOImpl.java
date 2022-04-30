@@ -42,8 +42,8 @@ public class MemberDAOImpl implements MemberDAO {
 	}
 	
 	@Override
-	public int countAll() {
-		return sqlSessionTemplate.selectOne("countAll");
+	public int countAllMember() {
+		return sqlSessionTemplate.selectOne("countAllMember");
 	}
 
 	@Override
@@ -63,7 +63,6 @@ public class MemberDAOImpl implements MemberDAO {
 	
 	@Override
 	public int insertDefaultIcon(String mEmail) {
-		// TODO Auto-generated method stub
 		return sqlSessionTemplate.insert("insertDefaultIcon", mEmail);
 	}
 

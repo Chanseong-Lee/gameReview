@@ -29,7 +29,7 @@ public interface MemberDAO {
 	public int countByNickname(String mNickname);
 	
 	//전체 회원수
-	public int countAll();
+	public int countAllMember();
 
 	//등록
 	public int insert(MemberDTO memberDTO);

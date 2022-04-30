@@ -15,6 +15,7 @@ import com.game.review.member.command.LoginUserDetails;
 import com.game.review.member.dto.MemberDTO;
 import com.game.review.member.exception.FailToInsertException;
 import com.game.review.member.exception.NoValueException;
+import com.game.review.member.exception.PointMinusException;
 import com.game.review.pointshop.dao.PointshopDAO;
 import com.game.review.pointshop.dto.InventoryDTO;
 import com.game.review.pointshop.dto.ItemsDTO;
@@ -74,15 +75,6 @@ public class PointShopService {
 			
 		}else if(authlevel.equals("ROLE_USER")){
 			//일반멤버
-			//인벤토리에 아이템 추가
-			InventoryDTO inven = new InventoryDTO();
-			inven.setItemNum(itemNum);
-			inven.setmNum(loginUserDetails.getNum());
-			
-			int res = pointshopDAO.insertInventory(inven);
-			if(res != 1) {
-				throw new FailToInsertException();
-			}
 			
 			//아이템 가격 불러오기
 			ItemsDTO item = (ItemsDTO) pointshopDAO.selectItemsBySeq(itemNum);
@@ -94,11 +86,27 @@ public class PointShopService {
 			//구매후 포인트 차감
 			Long memberPoint = loginUserDetails.getPoint();
 			Long pointAfterPurchase = memberPoint - price;
+			if(pointAfterPurchase < 0) {
+				throw new PointMinusException();
+			}
 			logger.info("보유포인트 - 가격 : " + memberPoint +" - " + price + " = "+pointAfterPurchase);
 			MemberDTO member = new MemberDTO();
 			member.setmNum(loginUserDetails.getNum());
 			member.setmPoint(pointAfterPurchase);
 			pointshopDAO.updateMemberPoint(member);
+			
+			
+			//인벤토리에 아이템 추가
+			InventoryDTO inven = new InventoryDTO();
+			inven.setItemNum(itemNum);
+			inven.setmNum(loginUserDetails.getNum());
+			
+			int res = pointshopDAO.insertInventory(inven);
+			if(res != 1) {
+				throw new FailToInsertException();
+			}
+			
+			
 			
 			//세션 포인트 수정
 			loginUserDetails.setPoint(pointAfterPurchase);

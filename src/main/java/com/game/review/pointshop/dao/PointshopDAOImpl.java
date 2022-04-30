@@ -128,6 +128,12 @@ public class PointshopDAOImpl implements PointshopDAO {
 		return sqlSessionTemplate.selectOne("selectUsingAdminItemBymNum", adNum);
 	}
 
+	@Override
+	public int countAllItem() {
+		return sqlSessionTemplate.selectOne("countAllItem");
+	}
+	
+	
 
 
 	

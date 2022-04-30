@@ -68,4 +68,6 @@ public interface PointshopDAO {
 	//사용중인 아이템 출력
 	public Object selectUsingAdminItemBymNum(Long adNum);
 	
+	public int countAllItem();
+	
 }

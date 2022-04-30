@@ -32,9 +32,9 @@ public class AdminMemberController {
 	private AdminMemberService adminMemberService;
 	
 	@RequestMapping(value="/admin/member/memberList", method = RequestMethod.GET)
-	public String goMemberList(@ModelAttribute("search") SearchCommand searchCommand, Model model) {
+	public String goMemberList(Model model) {
 		
-		int count = adminMemberService.countAll();
+		int count = adminMemberService.countAllMember();
 		List<MemberDTO> members = adminMemberService.showMemberList();
 		
 		model.addAttribute("count", count);
@@ -43,22 +43,24 @@ public class AdminMemberController {
 		return "admin/member/memberList";
 	}
 	
-	@RequestMapping(value="/admin/member/memberList/search", method=RequestMethod.GET)
-	public String search(@ModelAttribute("search") SearchCommand searchCommand, BindingResult errors, Model model) {
-		new SearchCommandValidator().validate(searchCommand, errors);
-		List<MemberDTO> members = adminMemberService.search(searchCommand);
-		model.addAttribute("members", members);
-		return "admin/member/memberList";
-	}
+//	@RequestMapping(value="/admin/member/memberList/search", method=RequestMethod.GET)
+//	public String search(@ModelAttribute("search") SearchCommand searchCommand, BindingResult errors, Model model) {
+//		new SearchCommandValidator().validate(searchCommand, errors);
+//		List<MemberDTO> members = adminMemberService.search(searchCommand);
+//		model.addAttribute("members", members);
+//		return "admin/member/memberList";
+//	}
 	
 	@RequestMapping(value="/admin/member/detail/{num}")
 	public String detail(@PathVariable Long num, Model model) {
 		
 		try {
+			int count = adminMemberService.countAllMember();
 			MemberDTO member = adminMemberService.detail(num);
 			ProfileImgDTO img = adminMemberService.profileImg(num);
+			model.addAttribute("count", count);
 			model.addAttribute("member", member);
-			model.addAttribute("profileImg", img.getProfileImgname());
+			model.addAttribute("userProfileImg", img.getProfileImgname());
 		}catch(NoExistMemberException e) {
 			logger.error("해당 멤버 존재 안함");
 			return "exception/accesssError";
@@ -78,7 +80,7 @@ public class AdminMemberController {
 			MemberDTO member = adminMemberService.detail(num);
 			ProfileImgDTO img = adminMemberService.profileImg(num);
 			model.addAttribute("member", member);
-			model.addAttribute("profileImg", img.getProfileImgname());
+			model.addAttribute("userProfileImg", img.getProfileImgname());
 		}catch(NoExistMemberException e) {
 			logger.error("해당 멤버 존재 안함");
 			return "exception/accesssError";
@@ -98,7 +100,7 @@ public class AdminMemberController {
 			MemberDTO member = adminMemberService.detail(num);
 			ProfileImgDTO img = adminMemberService.profileImg(num);
 			model.addAttribute("member", member);
-			model.addAttribute("profileImg", img.getProfileImgname());
+			model.addAttribute("userProfileImg", img.getProfileImgname());
 			new AdminMemberUpdateCommandValidator().validate(amuc, errors);
 			if(errors.hasErrors()) {
 				return "admin/member/memberUpdateForm";

@@ -11,7 +11,7 @@
 		where m.auth_num=at.auth_num order by m.m_num desc
 	</select>
 	
-	<select id="countAll" resultType="Integer">
+	<select id="countAllMember" resultType="Integer">
 		select nvl(count(*), 0) 
 		from "MEMBER"
 	</select>
@@ -152,4 +152,11 @@
 		delete from "MEMBER" 
 		where "M_NUM" = #{mNum}
 	</delete>
+	
+	<!-- 로그인 한거나 글 작성시 포인트 증가 글작성 10 / 댓글 5 -->
+	<update id="updatePointIncrease" parameterType="hashMap">
+		update "MEMBER"
+		set "M_POINT"= "M_POINT" + #{point}
+		where "M_NUM"=#{mNum}
+	</update>
 </mapper>

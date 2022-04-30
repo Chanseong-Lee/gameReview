@@ -8,6 +8,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>인벤토리</title>
 <style>
 table{
@@ -15,48 +16,46 @@ table{
 	border-collapse: collapse;
 }
 </style>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 </head>
 <body>
-<h1><sec:authentication property="principal.nickname"/>의 인벤토리 </h1>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<ul class="navbar-nav">
+	 <li class="nav-item">
+		<h1><sec:authentication property="principal.nickname"/>의 인벤토리 </h1>
+	 </li>
+</ul>
+</nav>
+	<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+		<div class="toast-container">
+		  	<div id="liveToastSuccess" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+	    		<div class="toast-header">
+	      			<img width="15px" src="${pageContext.request.contextPath }/resources/images/user_icon/default_admin_icon.png" class="rounded me-2">
+	      			<strong class="me-auto">관리자</strong>
+	      			<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+	    		</div>
+	    		<div class="toast-body">
+	      			성공적으로 아이템이 바뀌었습니다.
+	    		</div>
+	  		</div>
+		  	<div id="liveToastDelete" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+	    		<div class="toast-header bg-warning">
+	      			<img width="15px" src="${pageContext.request.contextPath }/resources/images/user_icon/default_admin_icon.png" class="rounded me-2">
+	      			<strong class="me-auto">관리자</strong>
+	      			<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+	    		</div>
+	    		<div class="toast-body">
+	      			성공적으로 아이템이 삭제되었습니다.
+	    		</div>
+	  		</div>
+		</div>
+	</div>
 	<div class="items">
-		<table id ="itemTable">
-			
-<!-- 
-<c:if test="${not empty items }">
-	<c:forEach var="item" items="${items }">
-		<c:if test="${item.invenUse == 'Y' }">
-			<c:set var="checked" value="checked"/>
-		</c:if>
-		<c:if test="${item.invenUse == 'N' }">
-			<c:set var="checked" value=""/>
-		</c:if>
-			<tr style="background-color: #B0F6AC">
-				<td>
-					<input type="radio" id="${item.itemName }" name="iconNum" value="${item.itemNum }" ${checked } onclick="clickRadio()">
-					<label for="${item.itemName }">
-					<c:if test="${item.itemNum == 1 }">
-						<img alt="아이콘이미지" src="<c:url value='/resources/images/user_icon/${item.itemFilename}'/>" width="15">
-					</c:if>
-					<c:if test="${item.itemNum != 1 }">
-						<img alt="아이콘이미지" src="<c:url value='/images/icons/${item.itemFilename}'/>" width="15">
-					</c:if>
-					</label>
-				</td>
-				<td>${item.itemName }</td>
-				<td>${item.itemPrice }</td>
-				<td>
-					<c:if test="${checked != 'checked' }">
-					<button type="button">버리기</button>
-					</c:if>
-				</td>
-			</tr>
-	</c:forEach>
-</c:if>
--->
+		<table class="table table-striped table-hover table-sm" id ="itemTable">
+
 		</table>	
 	</div>
-</body>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <script type="text/javascript">
 window.onload = function(){
 	listAjax();
@@ -84,8 +83,8 @@ let listAjax = function(){
         	
         	str += "<tr id=\"item"+ num +"\""+style+">";
         	str += "<td>";
-            str += "<input type=\"radio\" id=\"" + data[i].itemName + "\" name=\"itemNum\" value=\"" + data[i].itemNum + "\" " + checked + " onclick=\"clickRadio("+data[i].itemNum+")\">";
-        	str += "<label for=\""+ data[i].itemName +"\">";
+            str += "<input class=\"form-check-input\" type=\"radio\" id=\"" + data[i].itemName + "\" name=\"itemNum\" value=\"" + data[i].itemNum + "\" " + checked + " onclick=\"clickRadio("+data[i].itemNum+")\">";
+        	str += "&nbsp;&nbsp;<label class=\"form-check-label\" for=\""+ data[i].itemName +"\">";
             if(data[i].itemNum == 1){
                 str += "<img src=\"<c:url value='/resources/images/user_icon/"+ data[i].itemFilename +"'/>\" width=\"15\">" 
             }else if(data[i].itemNum == 6){
@@ -99,7 +98,7 @@ let listAjax = function(){
             str += "<td>"+ data[i].itemPrice +"</td>";
             str += "<td>";
             if(checked != 'checked' && data[i].itemNum != 1 && data[i].itemNum != 6){
-                str+="<button type=\"button\" onclick=\"deleteItem("+data[i].itemNum+")\" >버리기</button>";
+                str+="<button class=\"btn btn-warning btn-sm\" type=\"button\" onclick=\"deleteItem("+data[i].itemNum+")\" >버리기</button>";
             }
             str += "</td>";
             str += "</tr>";
@@ -132,6 +131,10 @@ let clickRadio = function(itemNum){
 			self.close();
 		}
 	})
+	var toastLiveExample = document.getElementById('liveToastSuccess');
+	var toast = new bootstrap.Toast(toastLiveExample);
+
+    toast.show();
 }
 
 let deleteItem = function(itemNum){
@@ -153,6 +156,9 @@ let deleteItem = function(itemNum){
 			if(text=='1'){
 				console.log("성공!");
 				listAjax();
+				var toastLiveExample = document.getElementById('liveToastDelete');
+				var toast = new bootstrap.Toast(toastLiveExample);
+				toast.show();
 			}else if(text=='2'){
 				console.log("실패!");
 				alert("서버에러!");
@@ -179,7 +185,6 @@ let turnGreen = function(){
     	}
     }
 }
-
-
 </script>
+</body>
 </html>
