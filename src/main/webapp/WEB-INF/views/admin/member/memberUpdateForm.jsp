@@ -15,7 +15,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>GAME REVIEW ADMIN</title>
+    <title>LCK CRITIC ADMIN</title>
 
     <!-- Custom fonts for this template -->
     <link href="${pageContext.request.contextPath}/resources/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -54,7 +54,7 @@
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i style="width:30px;"  class="fas fa-gamepad "></i>
                 </div>
-                <div class="sidebar-brand-text mx-3">GAME REVIEW <sup>admin</sup></div>
+                <div class="sidebar-brand-text mx-3">LCK CRITIC <sup>admin</sup></div>
             </a>
 
             <!-- Divider -->
@@ -166,10 +166,10 @@
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small"><sec:authentication property="principal.nickname"/> </span>
                                 <sec:authentication property='principal.profileImgname' var="profileImg" />
                                 <c:if test="${profileImg == 'unknown_profile.jpg'}">
-								<img class="img-profile rounded-circle" src="<c:url value='/resources/images/unknown_profile/${profileImg}' />" id="thumbnailImg" width="152">
+								<img class="img-profile rounded-circle" src="<c:url value='/resources/images/unknown_profile/${profileImg}' />" id="profileImgTopBar" width="152">
 								</c:if>
 								<c:if test="${profileImg != 'unknown_profile.jpg'}">
-								<img class="img-profile rounded-circle" src="<c:url value='/images/profile/${profileImg}' />" id="thumbnailImg" width="152">
+								<img class="img-profile rounded-circle" src="<c:url value='/images/profile/${profileImg}' />" id="profileImgTopBar" width="152">
 								</c:if>
                             </a>
                             <!-- Dropdown - User Information -->

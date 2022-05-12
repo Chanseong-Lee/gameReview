@@ -15,17 +15,18 @@ table{
 	border: 2px sold gray;
 	border-collapse: collapse;
 }
+h1 {
+	font-weight: bold;
+}
 </style>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+<script src="https://kit.fontawesome.com/c965630904.js" crossorigin="anonymous"></script>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/bootstrap.min.css">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-<ul class="navbar-nav">
-	 <li class="nav-item">
+	<div class="container text-center m-3">
 		<h1><sec:authentication property="principal.nickname"/>의 인벤토리 </h1>
-	 </li>
-</ul>
-</nav>
+	</div>
 	<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
 		<div class="toast-container">
 		  	<div id="liveToastSuccess" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
@@ -98,7 +99,7 @@ let listAjax = function(){
             str += "<td>"+ data[i].itemPrice +"</td>";
             str += "<td>";
             if(checked != 'checked' && data[i].itemNum != 1 && data[i].itemNum != 6){
-                str+="<button class=\"btn btn-warning btn-sm\" type=\"button\" onclick=\"deleteItem("+data[i].itemNum+")\" >버리기</button>";
+                str+="<button class=\"btn btn-danger btn-sm\" type=\"button\" onclick=\"deleteItem("+data[i].itemNum+")\" >버리기</button>";
             }
             str += "</td>";
             str += "</tr>";
@@ -125,6 +126,7 @@ let clickRadio = function(itemNum){
 		if(text=='1'){
 			console.log("성공!");
 			listAjax();
+			opener.parent.location.reload();
 		}else if(text=='2'){
 			console.log("실패!");
 			alert("서버에러!");

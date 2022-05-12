@@ -81,7 +81,7 @@
 	<!-- 회원가입 직후는 권한 레벨 1 -->
 	<insert id="insert" parameterType="memberDTO">
 		insert into "MEMBER"("M_NUM", "M_EMAIL", "M_PASSWORD", "M_NAME", "M_NICKNAME","M_ISVALID", "AUTH_NUM")
-		values("MEMBER_SEQ".nextval, #{mEmail}, #{mPassword}, #{mName}, #{mName}, #{mIsvalid}, (select "AUTH_NUM" from "AUTH" where "AUTH_LEVEL"=1))
+		values("MEMBER_SEQ".nextval, #{mEmail}, #{mPassword}, #{mName}, #{mNickname}, #{mIsvalid}, (select "AUTH_NUM" from "AUTH" where "AUTH_LEVEL"='ROLE_GUEST'))
 		<selectKey keyProperty="mNum" resultType="Long">
 			select nvl(max(M_NUM), 0) from "MEMBER"
 		</selectKey>
@@ -90,7 +90,7 @@
 	<!-- 회원가입시 디폴트 프로필사진 세팅 -->
 	<insert id="insertDefaultProfileImg" parameterType="String">
 		insert into "PROFILE_IMG"("PROFILE_NUM", "M_NUM") 
-		values("PROFILE_IMG_SEQ".nextval, (select "M_NUM" from "MEMBER" where "M_EMAIL" = #{mEmail}));
+		values("PROFILE_IMG_SEQ".nextval, (select "M_NUM" from "MEMBER" where "M_EMAIL" = #{mEmail}))
 	</insert>
 	
 	<!-- 회원가입시 디폴트 아이콘 세팅 -->
@@ -108,7 +108,7 @@
 	<!-- 받은 이메일에서 인증 누르면 실행 인증여부는 Y로, 권한레벨은 2로 업데이트  -->
 	<update id="updateValidKey" parameterType="hashmap">
 		update "MEMBER" 
-		set "M_ISVALID" = #{validKey}, "AUTH_NUM"=(select "AUTH_NUM" from "AUTH" where "AUTH_LEVEL"=2)
+		set "M_ISVALID" = #{validKey}, "AUTH_NUM"=(select "AUTH_NUM" from "AUTH" where "AUTH_LEVEL"='ROLE_USER')
 		where "M_EMAIL"=#{email}
 	</update>
 
@@ -154,9 +154,9 @@
 	</delete>
 	
 	<!-- 로그인 한거나 글 작성시 포인트 증가 글작성 10 / 댓글 5 -->
-	<update id="updatePointIncrease" parameterType="hashMap">
+	<update id="updatePointIncrease" parameterType="memberDTO">
 		update "MEMBER"
-		set "M_POINT"= "M_POINT" + #{point}
+		set "M_POINT"= "M_POINT" + #{mPoint}
 		where "M_NUM"=#{mNum}
 	</update>
 </mapper>

@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ArticlesDAO">
+		
+		<!-- 리뷰작성 -->
+        <insert id="insertArticle" parameterType="ArticlesDTO">
+        INSERT INTO ARTICLES(
+        	A_NUM, 
+        	A_CONTENT, 
+        	A_SCORE, 
+        	A_REGDATE, 
+        	M_NUM, 
+        	G_NUM)
+        VALUES (
+        	ARTICLES_SEQ.nextval, 
+        	#{aContent}, 
+        	#{aScore}, 
+        	sysdate,
+       		 (select M_NUM from MEMBER WHERE M_NUM = #{mNum}),
+       		 (select G_NUM from GAMES WHERE G_NUM = #{gNum})
+       		 )
+        </insert>
+        <!-- 전체목록 내림차순 -->
+        <select id = "selectArticles" resultType="ArticlesDTO">
+        	select
+			    articles.a_num,
+			    articles.a_content,
+			    articles.a_score,
+			    articles.a_regdate,
+			    articles.a_like,
+			    articles.m_num,
+			    articles.g_num,
+			    iteminfo.item_name,
+			    iteminfo.item_filename,
+			    member.m_nickname
+			from
+			    articles, 
+			    member,
+			    (select 
+			        iv.inven_num, 
+					iv.m_num, 
+					iv.inven_use,
+					iv.item_num, 
+					it.item_name, 
+					it.item_filename, 
+					it.item_price, 
+					it.item_regdate 
+					from inventory iv, items it 
+					where 
+						iv.item_num=it.item_num
+			            and iv.inven_use = 'Y') iteminfo
+			where 
+				iteminfo.m_num = articles.m_num 
+				and 
+				member.m_num = articles.m_num
+			order by articles.a_num desc
+        </select>
+        <select id = "selectArticlesByGameSeq" parameterType="Long" resultType="ArticlesDTO">
+        	select
+			    articles.a_num,
+			    articles.a_content,
+			    articles.a_score,
+			    articles.a_regdate,
+			    articles.a_like,
+			    articles.m_num,
+			    articles.g_num,
+			    iteminfo.item_name,
+			    iteminfo.item_filename,
+			    member.m_nickname
+			from
+			    articles, 
+			    member,
+			    games,
+			    (select 
+			        iv.inven_num, 
+					iv.m_num, 
+					iv.inven_use,
+					iv.item_num, 
+					it.item_name, 
+					it.item_filename, 
+					it.item_price, 
+					it.item_regdate 
+					from inventory iv, items it 
+					where 
+						iv.item_num=it.item_num
+			            and iv.inven_use = 'Y') iteminfo
+			where 
+				iteminfo.m_num = articles.m_num 
+				and 
+				member.m_num = articles.m_num
+				and
+				articles.g_num = games.g_num
+				and
+				articles.g_num=#{gNum}
+			order by articles.a_num desc
+        </select>
+             <!-- SELECT * FROM ARTICLES ORDER BY A_NUM DESC--> 
+        
+        <!-- LIKE컨트롤러 -->
+       <insert id="insertLike" parameterType="ArticlesDTO">
+	       insert into LIKECHECK(
+	       		L_NUM,
+	       		L_FLAG,
+	       		A_NUM, 
+	       		M_NUM
+	       		)
+	       values(
+	       		LIKECHECK_SEQ.nextval,
+	       		(SELECT NVL(MAX(L_FLAG),0) + 1 FROM LIKECHECK), 
+	       		#{aNum}, 
+	       		#{mNum}
+	       		)
+       </insert>
+       
+        <!-- LIKE컨트롤러 -->
+       <!-- 게시글 추천취소 시 삭제 -->
+       <delete id="deleteLike" parameterType="ArticlesDTO"> 
+       		delete 
+       		from LIKECHECK 
+       		WHERE 
+       			A_NUM = #{aNum} 
+       			and 
+       			M_NUM = #{mNum}
+       </delete>
+       
+        <!-- 게시글 추천 중복방지 select문 -->
+        <!-- LIKE컨트롤러 -->
+        <select id="likeCheck" resultType="Integer" parameterType="articlesDTO">
+        	select count(*) from LIKECHECK WHERE A_NUM = #{aNum} and M_NUM = #{mNum}
+        </select>
+        
+         <!-- LIKE컨트롤러 -->
+        <!-- 게시글 추천 시 1증가 -->
+        <update id="updateLikeCheck" parameterType="articlesDTO">
+        	update ARTICLES 
+        	set A_Like = A_LIKE + 1 
+        	WHERE 
+        		G_NUM = #{gNum}
+         		and 
+         		M_NUM = #{mNum} 
+         		and 
+         		A_NUM = #{aNum}
+        </update>
+        
+         <!-- LIKE컨트롤러 -->
+         <!-- 게시글 추천취소 시 1감소 -->
+        <update id="updateLikeCheckCancel" parameterType="articlesDTO">
+    		update ARTICLES 
+    		set A_Like = A_LIKE - 1 
+    		WHERE 
+    			G_NUM = #{gNum}
+     			and 
+     			M_NUM = #{mNum} 
+     			and 
+     			A_NUM = #{aNum}
+        </update>
+       
+        <!-- 지울수도있음 -->
+        <select id="count" resultType="ArticlesDTO">
+	        select 
+	        	A_NUM, 
+	        	A_CONTENT, 
+	        	A_SCORE, 
+	        	A_REGDATE, 
+	        	A_LIKE, M_NUM, G_NUM (select nvl(count(*), 0) from
+	        REPLIES where A_NUM = #{aNum}) as count2 from articles
+        </select>
+        
+        <update id="artupdate" parameterType="articlesDTO">
+	        update ARTICLES 
+	        set A_CONTENT = #{aContent}, A_SCORE = #{aScore}
+    	    WHERE 
+    	    	A_NUM = #{aNum}
+				and 
+				M_NUM = #{mNum} 
+				and 
+				G_NUM = #{gNum}
+        </update>
+        
+        <delete id="artdelete" parameterType="articlesDTO">
+			delete from ARTICLES 
+			WHERE 
+				A_NUM = #{aNum} 
+		</delete>
+	
+	  	<select id = "selectDel" resultType="articlesDTO" parameterType="articlesDTO">
+             SELECT * 
+             FROM ARTICLES 
+             WHERE 
+             	A_NUM = #{aNum} 
+             	and
+		 		M_NUM = #{mNum} 
+        </select>
+          
+          <!-- ARTICELS  -->
+          <select id = "selectContent" resultType="articlesDTO" parameterType="articlesDTO">
+             SELECT A_CONTENT 
+             FROM ARTICLES 
+             WHERE 
+             	A_NUM = #{aNum} 
+             	and
+		 		M_NUM = #{mNum} 
+		 		and 
+		 		G_NUM = #{gNum}
+        </select>
+        
+        <select id="countArticles" resultType="Integer">
+        	select nvl(count(*), 0) from articles
+        </select>
+        
+        <select id="countArticlesInGame" parameterType="Long" resultType="Integer">
+        	select nvl(count(*), 0) from articles where G_NUM=#{gNum}
+        </select>
+</mapper>

@@ -72,6 +72,6 @@ public interface MemberDAO {
 	public List<MemberDTO> searchByNickname(String nickname);
 	public List<MemberDTO> searchByName(String name);
 	
-	
+	public int updatePointIncrease(MemberDTO memberDTO);
 	
 }

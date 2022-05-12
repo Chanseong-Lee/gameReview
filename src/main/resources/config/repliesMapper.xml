@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="repliesDAO">
+
+   <!-- 댓글 등록  -->
+	<insert id="insertRe" parameterType="RepliesDTO">
+		INSERT INTO REPLIES(
+			RE_NUM, 
+			RE_CONTENT, 
+			A_NUM, 
+			M_NUM,
+			RE_REGDATE)
+		VALUES (
+			REPLIES_SEQ.nextval, 
+			#{reContent},
+			(select A_NUM from ARTICLES WHERE A_NUM=#{aNum}),
+			(select M_NUM from MEMBER WHERE M_NUM=#{mNum}),
+	    	sysdate
+	    	)
+    </insert>
+
+       <!--  등록한 댓글 가져오기 -->
+	<select id="selectRe" resultType="RepliesDTO" parameterType="HashMap">
+		SELECT * 
+		FROM REPLIES 
+		where 
+			A_NUM = #{kk} 
+		ORDER BY RE_NUM DESC
+	</select>
+
+    <!--  등록한 댓글 수정 -->
+	<update id="updateRe" parameterType="RepliesDTO">
+		update REPLIES 
+		set RE_CONTENT = #{reContent} 
+		WHERE 
+			A_NUM = #{aNum}
+			and 
+			M_NUM = #{mNum} 
+			and 
+			RE_NUM = #{reNum}
+	</update>
+	
+	<!--  등록한 댓글 삭제 -->
+	<delete id="deleteRe" parameterType="RepliesDTO">
+		delete from REPLIES 
+		WHERE 
+			A_NUM = #{aNum} 
+			and
+			M_NUM = #{mNum} 
+			and 
+			RE_NUM = #{reNum}
+	</delete>
+	
+	 <!--  내가 등록한 댓글 삭제하기전  내 쓴 댓글 찾기 -->
+	<select id="selectdel" resultType="RepliesDTO" parameterType="HashMap">
+		SELECT * 
+		FROM REPLIES 
+		where 
+			A_NUM = #{kk} 
+			and
+			M_NUM = #{kk2} 
+		ORDER BY RE_NUM DESC
+	</select>
+	     
+	     <!--  댓글이 몇개 달려있는지 확인  ex) 댓글 (3) 3개 달려있다  -->
+	     <!--  Articles 컨트롤러에 사용 -->
+	 <select id="selectCountForReview" resultType="Integer" parameterType="Long">
+        select count(*) 
+        from REPLIES 
+        WHERE A_NUM = #{aNum}
+     </select>
+
+</mapper>

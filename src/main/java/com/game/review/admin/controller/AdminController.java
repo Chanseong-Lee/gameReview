@@ -19,10 +19,12 @@ public class AdminController {
 		
 		int memberCnt = adminHomeService.countAllMember();
 		int itemCnt = adminHomeService.countAllItem();
-				//전체 게임수 구현해야됨
+		int gameCnt = adminHomeService.countAllGame();
+		int reviewCnt = adminHomeService.countAllReview();
 		model.addAttribute("memberCnt", memberCnt);
 		model.addAttribute("itemCnt", itemCnt);
-		
+		model.addAttribute("gameCnt", gameCnt);
+		model.addAttribute("reviewCnt", reviewCnt);
 		return "admin/adminHome";
 	}
 

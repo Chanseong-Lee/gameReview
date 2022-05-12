@@ -4,6 +4,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -14,7 +15,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>GAME REVIEW ADMIN</title>
+    <title>LCK CRITIC ADMIN</title>
 
     <!-- Custom fonts for this template -->
     <link href="${pageContext.request.contextPath}/resources/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -42,7 +43,7 @@
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i style="width:30px;"  class="fas fa-gamepad "></i>
                 </div>
-                <div class="sidebar-brand-text mx-3">GAME REVIEW <sup>admin</sup></div>
+                <div class="sidebar-brand-text mx-3">LCK CRITIC <sup>admin</sup></div>
             </a>
 
             <!-- Divider -->
@@ -187,45 +188,92 @@
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">게임관리</h1>
+                        <div class="text-right">
+                        <a href="${pageContext.request.contextPath}/admin/game/gameReg" class="btn btn-primary btn-icon-split">
+							<span class="icon text-white-50">
+                                  <i class="fas fa-folder-plus"></i>
+                            </span>
+                            <span class="text">게임 추가하기</span>
+                        </a>
+                        <a href="${pageContext.request.contextPath}/admin/game/addGenre" class="btn btn-info btn-icon-split">
+							<span class="icon text-white-50">
+                                  <i class="fas fa-info-circle"></i>
+                            </span>
+                            <span class="text">장르 관리하기</span>
+                        </a>
+                        </div>
                     </div>
 
                     <!-- Content Row -->
 					<div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+                            <h6 class="m-0 font-weight-bold text-primary">게임 목록</h6>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th>Name</th>
-                                            <th>Position</th>
-                                            <th>Office</th>
-                                            <th>Age</th>
-                                            <th>Start date</th>
-                                            <th>Salary</th>
+                                            <th>등록 번호</th>
+											<th>게임 사진</th>
+											<th>게임 이름</th>
+											<th>장르</th>
+											<th>개발사</th>
+											<th>출시일</th>
+											<th>가격</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
                                         <tr>
-                                            <th>Name</th>
-                                            <th>Position</th>
-                                            <th>Office</th>
-                                            <th>Age</th>
-                                            <th>Start date</th>
-                                            <th>Salary</th>
+                                            <th>등록 번호</th>
+											<th>게임 사진</th>
+											<th>게임 이름</th>
+											<th>장르</th>
+											<th>개발사</th>
+											<th>출시일</th>
+											<th>가격</th>
                                         </tr>
                                     </tfoot>
                                     <tbody>
-                                        <tr>
-                                            <td>Tiger Nixon</td>
-                                            <td>System Architect</td>
-                                            <td>Edinburgh</td>
-                                            <td>61</td>
-                                            <td>2011/04/25</td>
-                                            <td>$320,800</td>
-                                        </tr>
+							<c:if test="${!empty gameList }">
+							
+										<c:forEach var="game" items="${gameList }">
+							
+											<tr>
+												<td>${game.gNum}</td>
+							
+												<td class="text-center">
+													<c:forEach var="gameFile" items="${gameFilesList}">
+														<c:if test="${gameFile.gfLocation == 1}">
+															<c:if test="${game.gNum == gameFile.gNum}">
+																<img src="<c:url value="/images/games/${game.gCode }/${gameFile.gfSavedfilename }"/>" width="160">
+															</c:if>
+														</c:if>
+													</c:forEach>
+												</td>
+												<td>
+													<a href="<c:url value="/admin/game/gameDetail/${game.gNum }"/>">${game.gName }</a>
+												</td>
+							
+												<td>
+													<c:forEach var="genre" items="${genreList}">
+														<c:if test="${game.gNum == genre.gNum }">
+															<c:out value="${genre.genName}"></c:out>
+														</c:if>
+													</c:forEach>
+												</td>
+												<td>${game.gDev}</td>
+												<td><fmt:formatDate value="${game.gDate }" pattern="yyyy.MM.dd" />
+												</td>
+												<td>${game.gPrice }원</td>
+											</tr>
+										</c:forEach>
+									</c:if>
+									<c:if test="${empty gameList}">
+										<tr>
+											<td colspan="7">정보없음</td>
+										</tr>
+									</c:if>
                                     </tbody>
                                 </table>
                             </div>

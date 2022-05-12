@@ -14,7 +14,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>GAME REVIEW ADMIN</title>
+    <title>LCK CRITIC ADMIN</title>
 
     <!-- Custom fonts for this template-->
     <link href="${pageContext.request.contextPath }/resources/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -40,7 +40,7 @@
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i style="width:30px;"  class="fas fa-gamepad "></i>
                 </div>
-                <div class="sidebar-brand-text mx-3">GAME REVIEW <sup>admin</sup></div>
+                <div class="sidebar-brand-text mx-3">LCK CRITIC <sup>admin</sup></div>
             </a>
 
             <!-- Divider -->
@@ -162,7 +162,7 @@
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="${pageContext.request.contextPath}/member/update/profile">
+                                <a class="dropdown-item" href="javascript:popUpProfile()">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Profile
                                 </a>
@@ -236,7 +236,7 @@
                                             </div>
                                             <div class="row no-gutters align-items-center">
                                                 <div class="col-auto">
-                                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">0 개</div>
+                                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">${gameCnt } 개</div>
                                                 </div>
                                                 
                                             </div>
@@ -257,7 +257,7 @@
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                                                 누적 리뷰 수</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">0 개</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">${reviewCnt } 개</div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-comments fa-2x text-gray-300"></i>
@@ -329,33 +329,14 @@
     <script src="${pageContext.request.contextPath}/resources/vendor/chart.js/Chart.min.js"></script>
 
     <!-- Page level custom scripts -->
-
+	<script>
+	function popUpProfile(){
+		let url = "${pageContext.request.contextPath}/member/update/profile";
+		let name = "프로필";
+		let option = "width = 550, height = 550, top = 100, left = 200, location = no";
+		window.open(url, name, option);
+	}
+	</script>
 </body>
 
 </html>
-
-
-<%-- 
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
-<h1>admin home</h1><br>
-<div>
-<ol>
-	<li><a href="${pageContext.request.contextPath}/member/logout">로그아웃</a></li>
-	<li><a href="${pageContext.request.contextPath}/admin/game/gameList">게임관리</a></li>
-	<li><a href="${pageContext.request.contextPath}/admin/member/memberList">회원관리</a></li>
-	<li><a href="${pageContext.request.contextPath}/admin/item/itemList">아이템관리</a></li>
-	<li><a href="${pageContext.request.contextPath}/game/main">사용자페이지로</a></li>
-</ol>
-</div>
-
-</body>
-</html>
- --%>

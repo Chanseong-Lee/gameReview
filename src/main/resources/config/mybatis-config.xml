@@ -15,5 +15,11 @@
 		<typeAlias type="com.game.review.pointshop.dto.ItemsDTO"/>
 		<typeAlias type="com.game.review.pointshop.dto.InventoryDTO"/>
 		<typeAlias type="com.game.review.pointshop.dto.ShopDTO"/>
+		<typeAlias type="com.game.review.game.dto.GameFilesDTO"/>
+		<typeAlias type="com.game.review.game.dto.GamesDTO"/>
+		<typeAlias type="com.game.review.game.dto.GenreDTO"/>
+		<typeAlias type="com.game.review.game.dto.SpecDTO"/>
+		<typeAlias type="com.game.review.game.dto.ArticlesDTO"/>
+		<typeAlias type="com.game.review.game.dto.RepliesDTO"/>
 	</typeAliases>
 </configuration>

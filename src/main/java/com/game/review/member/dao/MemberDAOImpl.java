@@ -139,5 +139,10 @@ public class MemberDAOImpl implements MemberDAO {
 		return sqlSessionTemplate.update("updateProfileByAdmin", memberDTO); 
 	}
 
+	@Override
+	public int updatePointIncrease(MemberDTO memberDTO) {
+		return sqlSessionTemplate.update("updatePointIncrease", memberDTO);
+	}
+
 	
 }

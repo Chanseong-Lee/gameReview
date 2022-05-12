@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="gameDAO">
+	
+	<!-- 게임등록 -->
+	<insert id="insertGame" parameterType="gamesDTO">
+		INSERT INTO
+		GAMES(G_NUM, G_CODE, G_NAME, G_DEV, G_DATE, G_PRICE, G_CONTENT, AD_NUM)
+		VALUES(GAMES_SEQ.nextval, #{gCode}, #{gName}, #{gDev}, #{gDate},
+		#{gPrice},#{gContent},
+		(select AD_NUM from ADMIN WHERE AUTH_NUM=(select
+		AUTH_NUM FROM AUTH WHERE AUTH_LEVEL='ROLE_ADMIN')))
+	</insert>
+	
+	<!-- 메인이미지 등록 -->
+	<insert id="insertMainFile" parameterType="gameFilesDTO">
+		INSERT INTO
+		GAME_FILES(
+			"GF_NUM", 
+			"GF_FILENAME", 
+			"GF_SAVEDFILENAME",
+			"G_NUM",
+			"GF_LOCATION"
+		)
+		VALUES(
+			GF_SEQ.nextval, 
+			#{gfFilename},
+			#{gfSavedfilename},
+			(
+				select G_NUM 
+				from GAMES 
+				WHERE G_NAME=#{gName}
+			),
+			#{gfLocation}
+		)
+	</insert>
+	
+	<!-- 게임의 장르추가 -->
+	<insert id="insertGr" parameterType="genreDTO">
+		INSERT INTO	GENRE_GAMES(GR_NUM,G_NUM,GEN_NUM)
+		VALUES(GENRE_GAMES_SEQ.nextval,(select G_NUM from GAMES WHERE
+		G_NAME=#{gName}),#{genNum})
+	</insert>
+
+	<!-- 사양추가 -->
+	<insert id="insertSpec" parameterType="specDTO">
+		INSERT INTO SPEC(
+			SPEC_NUM,
+			SPEC_MIN_CPU,
+			SPEC_MIN_RAM,
+			SPEC_MIN_GPU,
+			SPEC_MIN_DX,
+			SPEC_PRO_CPU,
+			SPEC_PRO_RAM,
+			SPEC_PRO_GPU,
+			SPEC_PRO_DX,
+			G_NUM
+			)
+		VALUES(
+			SPEC_SEQ.nextval,
+			#{specMinCpu},
+			#{specMinRam},
+			#{specMinGpu},
+			#{specMinDx},
+			#{specProCpu},
+			#{specProRam},
+			#{specProGpu},
+			#{specProDx},
+			(select G_NUM from GAMES WHERE G_NAME=#{gName})
+			)
+	</insert>
+	
+	<!-- 슬라이더이미지 추가 -->
+	<insert id="insertSlideFile" parameterType="gameFilesDTO">
+		INSERT INTO
+		GAME_FILES(
+			GF_NUM, 
+			GF_FILENAME, 
+			GF_SAVEDFILENAME,
+			G_NUM,GF_LOCATION
+			)
+		VALUES(
+			GF_SEQ.nextval, 
+			#{gfFilename},
+			#{gfSavedfilename},
+			(select G_NUM from GAMES WHERE G_NAME=#{gName}),#{gfLocation}
+			)
+	</insert>
+	
+	<!-- 게임삭제 -->
+	<delete id="deleteGame" parameterType="Long">
+		DELETE FROM GAMES
+		WHERE
+		"G_NUM"=#{gNum}
+	</delete>
+	
+	<!-- 전체장르 -->
+	<select id="selectGenres" resultType="GenreDTO">
+		select * from GENRES
+	</select>
+	
+	<!-- 게임이 갖고있는 장르 리스트-->
+	<select id="selectGenreListOfGame" resultType="GenreDTO">
+		select 
+			G_NUM, 
+			GEN_NUM,
+			(select	GEN_NAME from GENRES where GEN_NUM=GENRE_GAMES.GEN_NUM) as GEN_NAME
+		from GENRE_GAMES order by GR_NUM desc
+	</select>
+
+	<select id="selectGameFilesList" resultType="gameFilesDTO">
+		select * 
+		from "GAME_FILES" order by "GF_NUM" desc
+	</select>
+
+	<select id="selectGameList" resultType="gamesDTO">
+		select 
+			g.g_num, 
+			g.g_code, 
+			g.g_name, 
+			g.g_dev, 
+			g.g_date,
+			g.g_price, 
+			g.g_content, 
+			g.ad_num, 
+			(
+				select 
+					nvl(avg(a_score), 0) 
+				from articles a 
+				where g.g_num=a.g_num
+			) as g_avg 
+		from games g 
+		order by g.g_num desc
+	</select>
+	
+	<!-- top3 game list -->
+	<select id="selectTopThreeGameList" resultType="gamesDTO">
+		<![CDATA[
+		select 
+			g.g_num, 
+			g.g_code, 
+			g.g_name, 
+			g.g_dev, 
+			g.g_date,
+			g.g_price, 
+			g.g_content, 
+			g.ad_num, 
+			g.g_avg,
+			g.rank
+		from (
+			select 
+				g_num, 
+				g_code, 
+				g_name, 
+				g_dev, 
+				g_date,
+				g_price, 
+				g_content, 
+				ad_num, 
+				(
+					select 
+						nvl(avg(a_score), 0) 
+					from articles a 
+					where g_num=a.g_num
+				) as g_avg,
+				rank() over (order by g_avg desc) as rank
+			from games
+			) g 
+		where g.rank <= 3
+		order by g.g_num desc
+		]]>
+	</select>
+	
+	<!-- 중복체크용 -->
+	<select id="countGameCodeForDup" parameterType="String" resultType="Integer">
+		select count(*) 
+		from GAMES 
+		where "G_CODE"=#{gCode}
+	</select>
+	<select id="countGameCodeForDupExItSelf" parameterType="gamesDTO" resultType="Integer">
+		select count(*) 
+		from GAMES 
+		where "G_CODE"=#{gCode} and "G_NUM" not in #{gNum}
+	</select>
+	
+	<select id="countGameNameForDup" parameterType="String" resultType="Integer">
+		select count(*) 
+		from GAMES 
+		where "G_NAME"=#{gName}
+	</select>
+	
+	<select id="countGameNameForDupExItSelf" parameterType="gamesDTO" resultType="Integer">
+		select count(*) 
+		from GAMES 
+		where "G_NAME"=#{gName} and "G_NUM" not in #{gNum}
+	</select>
+	
+	<!-- 디테일용 -->
+	<select id="selectGenresBySeq" parameterType="Long" resultType="GenreDTO" >
+		select 
+			GEN_NUM,
+			G_NUM, 
+			(
+				select
+					GEN_NAME 
+				from GENRES 
+				where GEN_NUM=GENRE_GAMES.GEN_NUM
+			) as GEN_NAME
+		from GENRE_GAMES 
+		where G_NUM= #{gNum}
+	</select>
+
+	<select id="selectGameFilesBySeq" parameterType="Long" resultType="gameFilesDTO">
+		select * 
+		from "GAME_FILES"  
+		WHERE G_NUM = #{gNum}
+	</select>
+
+	<select id="selectGameBySeq" parameterType="Long" resultType="gamesDTO">
+		select 
+			g.g_num, 
+			g.g_code, 
+			g.g_name, 
+			g.g_dev, 
+			g.g_date,
+			g.g_price, 
+			g.g_content, 
+			g.ad_num, 
+			(
+				select 
+					nvl(avg(a_score), 0) 
+				from articles a 
+				where g.g_num=a.g_num
+			) as g_avg 
+		from games g where g.g_num=#{gNum}
+	</select>
+
+	<select id="selectSpecBySeq" parameterType="Long" resultType="SpecDTO">
+		select * 
+		from SPEC 
+		WHERE G_NUM = #{gNum}
+	</select>
+	
+	<!-- game data update -->
+	<update id="updateGame" parameterType="GamesDTO">
+		update "GAMES"
+		set
+			"G_NAME"=#{gName}, 
+			"G_CODE"=#{gCode},
+			"G_DEV"=#{gDev},
+			"G_DATE"=#{gDate}, 
+			"G_PRICE"=${gPrice},
+			"G_CONTENT"=#{gContent} 
+		where "G_NUM"=#{gNum}
+	</update>
+
+	<update id="updateSpec" parameterType="SpecDTO">
+		update "SPEC"
+		set
+			"SPEC_MIN_CPU"=#{specMinCpu}, 
+			"SPEC_MIN_RAM"=#{specMinRam},
+			"SPEC_MIN_GPU"=#{specMinGpu},
+			"SPEC_MIN_DX"=#{specMinDx},
+			"SPEC_PRO_CPU"=#{specProCpu},
+			"SPEC_PRO_RAM"=#{specProRam},
+			"SPEC_PRO_GPU"=#{specProGpu},
+			"SPEC_PRO_DX"=#{specProDx}
+		where "G_NUM"=#{gNum}
+	</update>
+
+	<delete id="deleteGenre" parameterType="Long">
+		DELETE FROM GENRE_GAMES WHERE "G_NUM"=#{gNum}
+	</delete>
+
+	<insert id="updateGenre" parameterType="GenreDTO">
+		INSERT INTO
+		GENRE_GAMES(
+			GR_NUM,
+			G_NUM,
+			GEN_NUM
+			)
+		VALUES(
+			GENRE_GAMES_SEQ.nextval,
+			#{gNum},
+			#{genNum}
+			)
+	</insert>
+
+	<insert id="upinsertSpec" parameterType="SpecDTO">
+		INSERT INTO	SPEC(
+			SPEC_NUM,
+			SPEC_MIN_CPU,
+			SPEC_MIN_RAM,
+			SPEC_MIN_GPU,
+			SPEC_MIN_DX,
+			SPEC_PRO_CPU,
+			SPEC_PRO_RAM,
+			SPEC_PRO_GPU,
+			SPEC_PRO_DX,
+			G_NUM
+			)
+		VALUES(
+			SPEC_SEQ.nextval,
+			#{specMinCpu},
+			#{specMinRam},
+			#{specMinGpu},
+			#{specMinDx},
+			#{specProCpu},
+			#{specProRam},
+			#{specProGpu},
+			#{specProDx},
+			#{gNum}
+			)
+	</insert>
+	
+	<!-- 전체 게임수 -->
+	<select id="countGame" resultType="Integer">
+		select nvl(count(*), 0) from GAMES
+	</select>
+	
+	<!-- 이미지 파일 관련 -->
+	
+	<!-- 메인파일 삭제 -->
+	<delete id="deleteMainFile" parameterType="GameFilesDTO">
+		DELETE FROM GAME_FILES
+		WHERE GF_LOCATION=#{gfLocation} and G_NUM=#{gNum}
+	</delete>
+	<!-- 슬라이더 이미지 삭제 -->
+	<delete id="deleteSlideFile" parameterType="GameFilesDTO">
+		DELETE FROM GAME_FILES
+		WHERE GF_NUM=#{gfNum} and GF_LOCATION=#{gfLocation} and G_NUM=#{gNum}
+	</delete>
+	
+	<!-- 업데이트 시 기존파일삭제용도 -->
+	<select id="selectMainFile" parameterType="GameFilesDTO" resultType="GameFilesDTO">
+		select * from GAME_FILES 
+		where GF_LOCATION=#{gfLocation} and G_NUM=${gNum}
+	</select>
+	
+	<!-- 슬라이더파일 정보 -->
+	<select id="selectSliderFile" parameterType="Long" resultType="GameFilesDTO">
+		select * from GAME_FILES where GF_NUM=#{gfNum}
+	</select>
+
+	<insert id="updateSlideFile" parameterType="GameFilesDTO">
+		INSERT INTO
+		GAME_FILES(
+			GF_NUM, 
+			GF_FILENAME, 
+			GF_SAVEDFILENAME,
+			G_NUM,
+			GF_LOCATION
+			)
+		VALUES(
+			GF_SEQ.nextval, 
+			#{gfFilename},
+			#{gfSavedfilename},
+			(select G_NUM from GAMES WHERE G_NAME=#{gName}),
+			#{gfLocation}
+			)
+	</insert>
+
+	<insert id="updateMainFile" parameterType="GameFilesDTO">
+		INSERT INTO
+		GAME_FILES(
+			GF_NUM,
+			GF_FILENAME, 
+			GF_SAVEDFILENAME,
+			G_NUM,
+			GF_LOCATION
+			)
+		VALUES(
+			GF_SEQ.nextval, 
+			#{gfFilename},
+			#{gfSavedfilename},
+			(select G_NUM from GAMES WHERE G_NAME=#{gName}),
+			#{gfLocation}
+			)
+	</insert>
+	
+</mapper>

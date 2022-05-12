@@ -67,7 +67,7 @@ public class MemberRegController {
 	}
 	
 	// will be redirected after the submit and show phrases including simple status of the member as like the name, nickname and email
-	@RequestMapping(value="/member/registSuccess", method=RequestMethod.GET)
+	@RequestMapping(value="/member/reg/registSuccess", method=RequestMethod.GET)
 	public String regSuccess(
 			HttpServletRequest request,
 			Model model,
@@ -78,7 +78,7 @@ public class MemberRegController {
 		model.addAttribute("nickname", nickname);
 		model.addAttribute("name", name);
 		model.addAttribute("email", email);
-		return "member/registSuccess";
+		return "member/reg/registSuccess";
 	}
 	
 	
@@ -94,6 +94,6 @@ public class MemberRegController {
 		} catch(NoExistValidKeyException e) {
 			logger.error("없는 인증키");
 		}
-		return "member/mailAuthSuccess";//alert로 메일인증 완료 및 로그인 하라는 메시지 알림
+		return "member/reg/mailAuthSuccess";//alert로 메일인증 완료 및 로그인 하라는 메시지 알림
 	}
 }

@@ -15,7 +15,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>GAME REVIEW ADMIN</title>
+    <title>LCK CRITIC ADMIN</title>
 
     <!-- Custom fonts for this template -->
     <link href="${pageContext.request.contextPath}/resources/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -43,7 +43,7 @@
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i style="width:30px;"  class="fas fa-gamepad "></i>
                 </div>
-                <div class="sidebar-brand-text mx-3">GAME REVIEW <sup>admin</sup></div>
+                <div class="sidebar-brand-text mx-3">LCK CRITIC <sup>admin</sup></div>
             </a>
 
             <!-- Divider -->

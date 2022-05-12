@@ -8,7 +8,10 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>LCK CRITIC</title>
+<script src="https://kit.fontawesome.com/c965630904.js" crossorigin="anonymous"></script>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/bootstrap.min.css">
 <style>
 table{
 	border: 2px solid gray;
@@ -55,13 +58,25 @@ td{
 </style>
 </head>
 <body>
-<h1>회원정보 수정</h1>
-<button type="button" onclick="fetchPage('ajaxMemberUpdateForm')">회원정보 수정하기</button>
-<button type="button" onclick="fetchPage('ajaxPwdUpdateForm')">비밀번호 수정하기</button>
-<button type="button" onclick="fetchPage('ajaxMemberDeleteForm')">탈퇴하기</button>
-<br><br>
-<article></article>
+<div class="container">
+	<h1>회원정보 수정</h1>
+	<ul class="nav nav-tabs">
+	  <li class="nav-item">
+	    <a class="nav-link active" data-bs-toggle="tab" onclick="fetchPage('ajaxMemberUpdateForm')">Home</a>
+	  </li>
+	  <li class="nav-item">
+	    <a class="nav-link" data-bs-toggle="tab" onclick="fetchPage('ajaxPwdUpdateForm')">Profile</a>
+	  </li>
+	</ul>
+	
+	<sec:authorize access="hasRole('ROLE_USER')">
+	<button type="button" onclick="fetchPage('ajaxMemberDeleteForm')">탈퇴하기</button>
+	</sec:authorize>
+	<br><br>
+	<article></article>
+</div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <script type="text/javascript">
 window.onload = function(){
 	fetchPage('ajaxMemberUpdateForm');
@@ -131,6 +146,7 @@ let updateBtn = function () {
 				nicknameInput.style.backgroundColor = "white";
 				document.querySelector("#success").innerHTML = "변경사항이 저장되었습니다.";
 				document.querySelector("#success").style.color = "green";
+				opener.parent.location.reload();
 			} else if (text == '1') {
 				//중복
 				nicknameMsgSpan.innerHTML = "이미 사용중인 닉네임입니다.";
@@ -201,6 +217,7 @@ let updatePwdBtn = function () {
 					confirmPasswordInput.style.backgroundColor = "white";
 					document.querySelector("#success").innerHTML = "변경사항이 저장되었습니다.";
 					document.querySelector("#success").style.color = "green";
+					opener.parent.location.reload();
 				}else if(text == '2'){
 					passwordErrorMsgSpan.innerHTML = "";
 					passwordInput.style.backgroundColor = "white";
