@@ -20,6 +20,7 @@
 
 
 ## Development environment
+- Java 8
 - Windows 10 64bit
 - Oracle DB
 - Tomcat 9
