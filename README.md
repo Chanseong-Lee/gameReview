@@ -1,5 +1,5 @@
 # Project Name
-- LC Critic
+- LCK Critic
 
 ## Outline
 - The Website where you can leave reviews and ratings for games.
