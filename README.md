@@ -10,7 +10,7 @@
 - Members : Woojin Cho, Hyeokjin Kwon
 
 ## Development period
-- 1 Months (2022.04 ~ 2022.05)
+- 1 Month (2022.04 ~ 2022.05)
 
 
 ## Tools
