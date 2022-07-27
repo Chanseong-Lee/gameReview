@@ -16,7 +16,7 @@
 ## Tools
 - Spring Tool Suite 3
 - SQL Develpoer (Oracle DB)
-- MS Code
+- VS Code
 
 
 ## Development environment
